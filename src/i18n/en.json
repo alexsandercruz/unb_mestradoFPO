@@ -16,6 +16,13 @@
     "signInAnonymous": "Sign in Anonymously",
     "linkGoogle": "Link Google Account"
   },
+  "nnCore": {
+    "heading": "Network Core Diagnostics (nn-core + TensorFlow.js)",
+    "forwardLabel": "Pure TS Forward Pass (XOR 2→2→1 [1, 0])",
+    "weightedSumLabel": "Weighted Sum (z)",
+    "activationLabel": "Activated Output (a)",
+    "convergenceBadge": "AND, OR & XOR gates converging with loss < 0.05"
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",

@@ -16,6 +16,13 @@
     "signInAnonymous": "Entrar como Anônimo",
     "linkGoogle": "Vincular Conta Google"
   },
+  "nnCore": {
+    "heading": "Diagnóstico do Núcleo da Rede (nn-core + TensorFlow.js)",
+    "forwardLabel": "Forward Pass Puro TS (XOR 2→2→1 [1, 0])",
+    "weightedSumLabel": "Soma Ponderada (z)",
+    "activationLabel": "Saída Ativada (a)",
+    "convergenceBadge": "Portas AND, OR e XOR convergindo com loss < 0,05"
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",
