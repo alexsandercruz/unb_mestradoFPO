@@ -3,6 +3,7 @@ import { getDictionary, Locale } from './i18n';
 import { useGameStore } from './store/useGameStore';
 import { NeuronEditor } from './features/editor/NeuronEditor';
 import { ParamsPanel } from './features/params/ParamsPanel';
+import { ArenaView } from './features/arena/ArenaView';
 import { DatasetSample } from './core/nn-core';
 
 const DEFAULT_XOR_DATASET: DatasetSample[] = [
@@ -158,6 +159,15 @@ export function App(): React.JSX.Element {
           onChangeWeightInit={setWeightInit}
           onChangeUseBias={setUseBias}
           onChangeParameters={setParameters}
+        />
+
+        <ArenaView
+          locale={locale}
+          seed={42}
+          topology={topology}
+          parameters={parameters}
+          activation={activation}
+          useBias={useBias}
         />
 
         <section className="levels-card" aria-labelledby="levels-heading">

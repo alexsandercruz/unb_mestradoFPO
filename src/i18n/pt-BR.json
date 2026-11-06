@@ -99,6 +99,23 @@
     "chartTitle": "Curva de Aprendizado (Loss por Época)",
     "chartRewardTitle": "Recompensa por Episódio (Reforço)"
   },
+  "arena": {
+    "title": "4. Arena 2D — Simulação Determinística (30 ticks/s + Pixi.js)",
+    "seedBadge": "Seed determinística: {seed}",
+    "runBtn": "Testar Robô na Arena",
+    "replayBtn": "Replay do Episódio",
+    "speedLabel": "Velocidade:",
+    "tickLabel": "Tick: {current} / {total}",
+    "rewardLabel": "Recompensa: {reward}",
+    "outcomeReady": "Aguardando execução na arena",
+    "outcomeRunning": "Executando episódio...",
+    "outcomeReplay": "Reproduzindo Replay...",
+    "outcomeSuccess": "Desafio Superado! O robô alcançou o alvo!",
+    "outcomeCollision": "Falha: O robô colidiu com um obstáculo ou porta fechada.",
+    "outcomeTimeout": "Tempo esgotado antes de alcançar o alvo.",
+    "sensorsTelemetry": "Leitura dos Sensores (Tick Atual)",
+    "actionsTelemetry": "Decisão da Rede (Saídas)"
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",

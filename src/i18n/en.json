@@ -99,6 +99,23 @@
     "chartTitle": "Learning Curve (Loss per Epoch)",
     "chartRewardTitle": "Reward per Episode (Reinforcement)"
   },
+  "arena": {
+    "title": "4. 2D Arena — Deterministic Simulation (30 ticks/s + Pixi.js)",
+    "seedBadge": "Deterministic seed: {seed}",
+    "runBtn": "Test Robot in Arena",
+    "replayBtn": "Replay Episode",
+    "speedLabel": "Speed:",
+    "tickLabel": "Tick: {current} / {total}",
+    "rewardLabel": "Reward: {reward}",
+    "outcomeReady": "Ready to run in the arena",
+    "outcomeRunning": "Running episode...",
+    "outcomeReplay": "Playing Replay...",
+    "outcomeSuccess": "Challenge Cleared! The robot reached the target!",
+    "outcomeCollision": "Failed: The robot collided with an obstacle or closed gate.",
+    "outcomeTimeout": "Time ran out before reaching the target.",
+    "sensorsTelemetry": "Sensor Readings (Current Tick)",
+    "actionsTelemetry": "Network Decision (Outputs)"
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",
