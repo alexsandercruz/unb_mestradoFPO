@@ -1,0 +1,89 @@
+{
+  "id": "05-maze",
+  "levelNumber": 5,
+  "title": {
+    "pt-BR": "5. Labirinto",
+    "en": "5. Maze"
+  },
+  "challenge": {
+    "pt-BR": "Chegar ao alvo num labirinto curto desviando de blocos",
+    "en": "Reach the target in a short maze while avoiding blocks"
+  },
+  "concept": {
+    "pt-BR": "Aprendizado por reforço simples (recompensa por chegar, penalidade por bater)",
+    "en": "Simple reinforcement learning (reward for reaching goal, penalty for collision)"
+  },
+  "allowedInputs": ["dist_front", "dist_left", "dist_right", "target_angle"],
+  "allowedOutputs": ["walk", "turn_left", "turn_right"],
+  "maxHiddenLayers": 2,
+  "maxHiddenNeurons": 6,
+  "idealHiddenNeurons": 6,
+  "defaultActivation": "tanh",
+  "targetLoss": 0.08,
+  "rewardRules": {
+    "reachGoal": 100,
+    "stepAlive": 1,
+    "collisionPenalty": -15
+  },
+  "idealTopology": {
+    "inputs": ["dist_front", "dist_left", "dist_right", "target_angle"],
+    "hidden": [
+      [
+        { "id": "h1", "activation": "tanh" },
+        { "id": "h2", "activation": "tanh" },
+        { "id": "h3", "activation": "tanh" },
+        { "id": "h4", "activation": "tanh" },
+        { "id": "h5", "activation": "tanh" },
+        { "id": "h6", "activation": "tanh" }
+      ]
+    ],
+    "outputs": ["walk", "turn_left", "turn_right"],
+    "links": [
+      ["dist_front", "h1"],
+      ["dist_left", "h2"],
+      ["dist_right", "h3"],
+      ["target_angle", "h4"],
+      ["dist_front", "h5"],
+      ["target_angle", "h6"],
+      ["h1", "walk"],
+      ["h2", "turn_right"],
+      ["h3", "turn_left"],
+      ["h4", "turn_right"],
+      ["h5", "walk"],
+      ["h6", "turn_left"]
+    ]
+  },
+  "dataset": [
+    { "inputs": [0.0, 0.5, 0.5, 0.0], "targets": [1, 0, 0] },
+    { "inputs": [0.4, 0.85, 0.2, 0.35], "targets": [1, 0, 1] },
+    { "inputs": [0.4, 0.2, 0.85, -0.35], "targets": [1, 1, 0] },
+    { "inputs": [0.0, 0.4, 0.6, -0.25], "targets": [1, 1, 0] }
+  ],
+  "arena": {
+    "mode": "maze_rl",
+    "width": 600,
+    "height": 260,
+    "startX": 50,
+    "startY": 130,
+    "startAngleDeg": 0,
+    "targetX": 540,
+    "targetY": 130,
+    "maxTicks": 125,
+    "obstacles": [
+      { "id": "maze-wall-1", "x": 220, "y": 55, "width": 24, "height": 45 },
+      { "id": "maze-wall-2", "x": 370, "y": 205, "width": 24, "height": 45 }
+    ]
+  },
+  "tutorial": {
+    "pt-BR": [
+      "Passo 1 (Faça primeiro): Use os 4 sensores (incluindo Ângulo até o alvo), até 6 neurônios ocultos e as 3 ações de navegação (rede 4 → 6 → 3).",
+      "Passo 2 (Otimize a Recompensa): No treino por reforço, o robô ganha +100 ao atingir a bandeira, +1 por passo seguro e perde −15 se bater.",
+      "Conceito revelado — Aprendizado por Reforço: Em vez de decorar exemplos prontos, o agente descobre quais ações maximizam a recompensa total no ambiente!"
+    ],
+    "en": [
+      "Step 1 (Do first): Use all 4 sensors (including Target angle), up to 6 hidden neurons, and the 3 navigation actions (4 → 6 → 3 network).",
+      "Step 2 (Maximize Reward): In reinforcement training, the robot earns +100 for reaching the flag, +1 per safe step, and −15 on collision.",
+      "Concept unlocked — Reinforcement Learning: Instead of memorizing labeled examples, the agent discovers actions that maximize cumulative reward!"
+    ]
+  }
+}

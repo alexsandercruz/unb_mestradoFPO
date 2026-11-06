@@ -1,0 +1,85 @@
+{
+  "id": "03-corridor",
+  "levelNumber": 3,
+  "title": {
+    "pt-BR": "3. Corredor",
+    "en": "3. Corridor"
+  },
+  "challenge": {
+    "pt-BR": "Seguir um corredor sinuoso sem bater nas paredes",
+    "en": "Follow a winding corridor without hitting the walls"
+  },
+  "concept": {
+    "pt-BR": "Camada oculta e ativação não linear",
+    "en": "Hidden layer and non-linear activation"
+  },
+  "allowedInputs": ["dist_front", "dist_left", "dist_right"],
+  "allowedOutputs": ["walk", "turn_left", "turn_right"],
+  "maxHiddenLayers": 1,
+  "maxHiddenNeurons": 6,
+  "idealHiddenNeurons": 4,
+  "defaultActivation": "sigmoid",
+  "targetLoss": 0.06,
+  "idealTopology": {
+    "inputs": ["dist_front", "dist_left", "dist_right"],
+    "hidden": [
+      [
+        { "id": "h1", "activation": "sigmoid" },
+        { "id": "h2", "activation": "sigmoid" },
+        { "id": "h3", "activation": "sigmoid" },
+        { "id": "h4", "activation": "sigmoid" }
+      ]
+    ],
+    "outputs": ["walk", "turn_left", "turn_right"],
+    "links": [
+      ["dist_front", "h1"],
+      ["dist_left", "h1"],
+      ["dist_right", "h1"],
+      ["dist_front", "h2"],
+      ["dist_left", "h2"],
+      ["dist_right", "h2"],
+      ["dist_front", "h3"],
+      ["dist_left", "h3"],
+      ["dist_right", "h3"],
+      ["dist_front", "h4"],
+      ["dist_left", "h4"],
+      ["dist_right", "h4"],
+      ["h1", "walk"],
+      ["h2", "walk"],
+      ["h3", "turn_left"],
+      ["h4", "turn_right"],
+      ["h1", "turn_left"],
+      ["h2", "turn_right"]
+    ]
+  },
+  "dataset": [
+    { "inputs": [0.0, 0.5, 0.5], "targets": [1, 0, 0] },
+    { "inputs": [0.2, 0.85, 0.15], "targets": [1, 0, 1] },
+    { "inputs": [0.2, 0.15, 0.85], "targets": [1, 1, 0] },
+    { "inputs": [0.6, 0.75, 0.25], "targets": [1, 0, 1] }
+  ],
+  "arena": {
+    "mode": "corridor",
+    "width": 600,
+    "height": 260,
+    "startX": 50,
+    "startY": 130,
+    "startAngleDeg": 0,
+    "targetX": 540,
+    "targetY": 130,
+    "maxTicks": 120,
+    "obstacles": []
+  },
+  "tutorial": {
+    "pt-BR": [
+      "Passo 1 (Faça primeiro): Monte 3 sensores (frente, esquerda, direita), até 4 neurônios na camada oculta e 3 ações (andar, virar esquerda, virar direita).",
+      "Passo 2 (Treine com ativação não linear): Use sigmoide ou ReLU e treine para que o robô corrija sua direção quando se aproximar de uma parede.",
+      "Conceito revelado — Camada Oculta: Os neurônios intermediários combinam múltiplos sensores para tomar decisões coordenadas."
+    ],
+    "en": [
+      "Step 1 (Do first): Set up 3 sensors (front, left, right), up to 4 hidden neurons, and 3 actions (walk, turn left, turn right).",
+      "Step 2 (Train with non-linear activation): Use sigmoid or ReLU and train so the robot steers away when approaching a wall.",
+      "Concept unlocked — Hidden Layer: Intermediate neurons combine multiple sensor readings to make coordinated decisions."
+    ]
+  }
+}

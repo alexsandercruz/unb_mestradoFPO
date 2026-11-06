@@ -116,19 +116,102 @@
     "sensorsTelemetry": "Sensor Readings (Current Tick)",
     "actionsTelemetry": "Network Decision (Outputs)"
   },
+  "levels": {
+    "heading": "Mission Levels (1 to 5) — Progress & Tutorial",
+    "level1": "Level 1 — First Step (Perceptron 1→1)",
+    "level2": "Level 2 — Logic Gate (Bias & linear separation 2→1)",
+    "level3": "Level 3 — Corridor (Hidden layer 3→4→3)",
+    "level4": "Level 4 — The XOR (Backpropagation 2→2→1)",
+    "level5": "Level 5 — Maze (Reinforcement learning 4→6→3)",
+    "locked": "Locked",
+    "unlocked": "Unlocked",
+    "totalStars": "Total Stars: {stars} / 15",
+    "loadIdealBtn": "Build Level Ideal Network",
+    "tutorialHeading": "Guided Tutorial (Learn by Doing, Name it Later)",
+    "datasetHeading": "Supervised Examples Table (Situation → Correct Action)",
+    "rewardHeading": "Reward Rules (Reinforcement Learning — Level 5)",
+    "inputsCol": "Sensors (Inputs)",
+    "targetsCol": "Expected Action (Outputs)",
+    "glossaryBtn": "ML Glossary (RF-10)",
+    "quizBtn": "Final Quiz (5 Questions)",
+    "glossaryTitle": "Machine Learning Glossary",
+    "quizTitle": "Final Verification Quiz (5 SDD Concepts)",
+    "quizScore": "Quiz Score: {score} / 5",
+    "glossaryItems": [
+      {
+        "term": "Artificial Neuron (Perceptron)",
+        "def": "A unit that receives inputs, multiplies each by a weight (w), adds bias (b), and applies an activation function."
+      },
+      {
+        "term": "Weight & Bias (Threshold)",
+        "def": "Weight sets the strength and sign (+ or −) of a connection; bias shifts the firing threshold of the neuron."
+      },
+      {
+        "term": "Hidden Layer & Activation Function",
+        "def": "An intermediate layer that, paired with non-linear activations (ReLU, sigmoid, tanh), solves problems not separable by a single line, like XOR."
+      },
+      {
+        "term": "Loss, Underfitting & Overfitting",
+        "def": "Loss measures network error. Underfitting happens when the model is too simple or under-trained; overfitting happens when it memorizes noise."
+      },
+      {
+        "term": "Supervised vs. Reinforcement Learning",
+        "def": "In supervised learning the network imitates labeled examples; in reinforcement learning it learns via rewards and penalties."
+      }
+    ],
+    "quizQuestions": [
+      {
+        "q": "1. What does an artificial neuron compute before applying its activation function?",
+        "options": [
+          "The weighted sum of inputs multiplied by weights plus the bias",
+          "A purely random action ignoring inputs",
+          "It deletes arena sensors"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "2. Why does the XOR gate (Level 4) require a hidden layer?",
+        "options": [
+          "Because it is not linearly separable by a single neuron",
+          "Because it only has 1 input sensor",
+          "Because bias does not work on logic gates"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "3. What happens if the learning rate is set too high?",
+        "options": [
+          "Weight updates take oversized steps and loss may oscillate without converging",
+          "The browser turns off",
+          "The number of sensors doubles automatically"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "4. How do we recognize good learning on the Loss chart?",
+        "options": [
+          "The loss curve decreases over epochs until dropping below the target",
+          "The loss curve rises forever",
+          "Loss stays fixed at 1.0"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "5. What differentiates Levels 1–4 (Supervised) from Level 5 (Reinforcement)?",
+        "options": [
+          "In Levels 1–4 the network imitates labeled examples; in Level 5 it maximizes rewards and avoids penalties",
+          "Level 5 has no sensors or actions",
+          "Supervised learning does not use weights"
+        ],
+        "correct": 0
+      }
+    ]
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",
     "train": "3. Train (TensorFlow.js Worker)",
     "test": "4. Test (2D Arena)"
-  },
-  "levels": {
-    "heading": "Prototype Levels (MVP)",
-    "level1": "Level 1 — First Step (Perceptron 1→1)",
-    "level2": "Level 2 — Logic Gate (Bias & linear separation 2→1)",
-    "level3": "Level 3 — Corridor (Hidden layer 3→4→3)",
-    "level4": "Level 4 — The XOR (Backpropagation 2→2→1)",
-    "level5": "Level 5 — Maze (Reinforcement learning 4→6→3)"
   },
   "actions": {
     "start": "Start Level 1",

@@ -1,0 +1,71 @@
+{
+  "id": "04-xor",
+  "levelNumber": 4,
+  "title": {
+    "pt-BR": "4. O XOR",
+    "en": "4. The XOR"
+  },
+  "challenge": {
+    "pt-BR": "Porta que abre com exatamente um botão aceso (OU Exclusivo)",
+    "en": "Gate that opens when exactly one button is lit (Exclusive OR)"
+  },
+  "concept": {
+    "pt-BR": "Por que um neurônio só não basta; treino por backpropagation",
+    "en": "Why a single neuron is not enough; training via backpropagation"
+  },
+  "allowedInputs": ["dist_front", "floor_light"],
+  "allowedOutputs": ["jump"],
+  "maxHiddenLayers": 1,
+  "maxHiddenNeurons": 4,
+  "idealHiddenNeurons": 2,
+  "defaultActivation": "tanh",
+  "targetLoss": 0.05,
+  "idealTopology": {
+    "inputs": ["dist_front", "floor_light"],
+    "hidden": [
+      [
+        { "id": "h1", "activation": "tanh" },
+        { "id": "h2", "activation": "tanh" }
+      ]
+    ],
+    "outputs": ["jump"],
+    "links": [
+      ["dist_front", "h1"],
+      ["floor_light", "h1"],
+      ["dist_front", "h2"],
+      ["floor_light", "h2"],
+      ["h1", "jump"],
+      ["h2", "jump"]
+    ]
+  },
+  "dataset": [
+    { "inputs": [0, 0], "targets": [0] },
+    { "inputs": [0, 1], "targets": [1] },
+    { "inputs": [1, 0], "targets": [1] },
+    { "inputs": [1, 1], "targets": [0] }
+  ],
+  "arena": {
+    "mode": "xor_gate",
+    "width": 600,
+    "height": 260,
+    "startX": 50,
+    "startY": 180,
+    "startAngleDeg": 0,
+    "targetX": 540,
+    "targetY": 180,
+    "maxTicks": 110,
+    "obstacles": []
+  },
+  "tutorial": {
+    "pt-BR": [
+      "Passo 1 (Faça primeiro): Monte a rede 2 → 2 → 1 (2 entradas, 2 neurônios ocultos e 1 saída totalmente conectados).",
+      "Passo 2 (Treine por Backpropagation): Use função tanh ou sigmoide e 200+ épocas para ver a curva de loss cair abaixo de 0,05.",
+      "Conceito revelado — Backpropagation e XOR: O problema XOR não é linearmente separável! Um neurônio oculto aprende OR, outro aprende AND, e a saída subtrai um do outro."
+    ],
+    "en": [
+      "Step 1 (Do first): Build the 2 → 2 → 1 network (2 inputs, 2 hidden neurons, and 1 output fully connected).",
+      "Step 2 (Train via Backpropagation): Use tanh or sigmoid activation and 200+ epochs to watch the loss curve drop below 0.05.",
+      "Concept unlocked — Backpropagation & XOR: XOR is not linearly separable! One hidden neuron learns OR, the other learns AND, and the output combines them."
+    ]
+  }
+}

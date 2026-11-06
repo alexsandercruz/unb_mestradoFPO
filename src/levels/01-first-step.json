@@ -1,0 +1,62 @@
+{
+  "id": "01-first-step",
+  "levelNumber": 1,
+  "title": {
+    "pt-BR": "1. Primeiro passo",
+    "en": "1. First Step"
+  },
+  "challenge": {
+    "pt-BR": "Pular caixas quando estiverem perto",
+    "en": "Jump over boxes when they are close"
+  },
+  "concept": {
+    "pt-BR": "Neurônio único, peso e limiar (Perceptron)",
+    "en": "Single neuron, weight, and threshold (Perceptron)"
+  },
+  "allowedInputs": ["dist_front"],
+  "allowedOutputs": ["jump"],
+  "maxHiddenLayers": 0,
+  "maxHiddenNeurons": 0,
+  "idealHiddenNeurons": 0,
+  "defaultActivation": "step",
+  "targetLoss": 0.05,
+  "idealTopology": {
+    "inputs": ["dist_front"],
+    "hidden": [],
+    "outputs": ["jump"],
+    "links": [["dist_front", "jump"]]
+  },
+  "dataset": [
+    { "inputs": [0.0], "targets": [0] },
+    { "inputs": [0.15], "targets": [0] },
+    { "inputs": [0.75], "targets": [1] },
+    { "inputs": [1.0], "targets": [1] }
+  ],
+  "arena": {
+    "mode": "box_jump",
+    "width": 600,
+    "height": 260,
+    "startX": 50,
+    "startY": 180,
+    "startAngleDeg": 0,
+    "targetX": 540,
+    "targetY": 180,
+    "maxTicks": 115,
+    "obstacles": [
+      { "id": "box-1", "x": 210, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
+      { "id": "box-2", "x": 380, "y": 165, "width": 26, "height": 30, "lowObstacle": true }
+    ]
+  },
+  "tutorial": {
+    "pt-BR": [
+      "Passo 1 (Faça primeiro): Conecte o sensor 'Distância à frente' à ação 'Pular' com um cabo positivo.",
+      "Passo 2 (Ajuste e treine): Clique em 'Treinar Rede' ou ajuste o peso positivo e um bias negativo para que o robô só pule quando a caixa estiver perto.",
+      "Conceito revelado — Perceptron: Você acabou de construir um neurônio artificial! Ele multiplica a entrada pelo peso (w), soma o limiar (bias b) e ativa a saída."
+    ],
+    "en": [
+      "Step 1 (Do first): Connect the 'Distance front' sensor to the 'Jump' action with a positive cable.",
+      "Step 2 (Tune & train): Click 'Train Network' or tune a positive weight and negative bias so the robot only jumps when a box is near.",
+      "Concept unlocked — Perceptron: You just built an artificial neuron! It multiplies input by weight (w), adds bias (b), and triggers the activation."
+    ]
+  }
+}

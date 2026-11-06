@@ -1,0 +1,62 @@
+{
+  "id": "02-logic-gate",
+  "levelNumber": 2,
+  "title": {
+    "pt-BR": "2. Porta lógica",
+    "en": "2. Logic Gate"
+  },
+  "challenge": {
+    "pt-BR": "Abrir a porta com botões de luz no chão (AND / OR)",
+    "en": "Open the gate using floor light buttons (AND / OR)"
+  },
+  "concept": {
+    "pt-BR": "Bias e separação linear",
+    "en": "Bias and linear separation"
+  },
+  "allowedInputs": ["dist_front", "floor_light"],
+  "allowedOutputs": ["jump"],
+  "maxHiddenLayers": 1,
+  "maxHiddenNeurons": 1,
+  "idealHiddenNeurons": 0,
+  "defaultActivation": "sigmoid",
+  "targetLoss": 0.05,
+  "idealTopology": {
+    "inputs": ["dist_front", "floor_light"],
+    "hidden": [],
+    "outputs": ["jump"],
+    "links": [
+      ["dist_front", "jump"],
+      ["floor_light", "jump"]
+    ]
+  },
+  "dataset": [
+    { "inputs": [0, 0], "targets": [0] },
+    { "inputs": [0, 1], "targets": [1] },
+    { "inputs": [1, 0], "targets": [1] },
+    { "inputs": [1, 1], "targets": [1] }
+  ],
+  "arena": {
+    "mode": "logic_gate_and_or",
+    "width": 600,
+    "height": 260,
+    "startX": 50,
+    "startY": 180,
+    "startAngleDeg": 0,
+    "targetX": 540,
+    "targetY": 180,
+    "maxTicks": 110,
+    "obstacles": []
+  },
+  "tutorial": {
+    "pt-BR": [
+      "Passo 1 (Faça primeiro): Ligue os 2 sensores à saída sem usar camada oculta (rede 2 → 1).",
+      "Passo 2 (Experimente o Bias): Veja como mudar o bias altera se a porta abre com 1 botão aceso (OR) ou só com os 2 botões acesos (AND).",
+      "Conceito revelado — Separação Linear: Uma linha reta consegue separar os exemplos verdadeiros dos falsos nas portas AND e OR!"
+    ],
+    "en": [
+      "Step 1 (Do first): Connect both sensors directly to the output without a hidden layer (2 → 1 network).",
+      "Step 2 (Explore Bias): Observe how shifting the bias changes whether the gate opens with 1 button (OR) or requires both buttons (AND).",
+      "Concept unlocked — Linear Separation: A single straight line can separate true and false cases in AND and OR gates!"
+    ]
+  }
+}

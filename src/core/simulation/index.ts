@@ -111,7 +111,7 @@ export function runSimulationEpisode(config: SimulationConfig): SimulationEpisod
   let outcome: EpisodeOutcome = 'timeout';
 
   const frames: SimulationFrame[] = [];
-  const stepSpeed = 5.0; // 1 unidade de avanço escalada na arena (600px em ~100 ticks)
+  const stepSpeed = 5.8; // 1 unidade de avanço escalada na arena (600px em ~95 ticks)
 
   // Para fases de portas lógicas (Fase 2 e Fase 4), avalia os 4 pares da tabela-verdade ao longo da caminhada
   const truthTableCases: [number, number][] = [
@@ -157,13 +157,14 @@ export function runSimulationEpisode(config: SimulationConfig): SimulationEpisod
       sensors.dist_front = b1;
       sensors.floor_light = b2;
     } else if (arena.mode === 'corridor' || arena.mode === 'maze_rl') {
-      // Calcula proximidade às paredes laterais e frontais + ângulo até o alvo
+      // Calcula proximidade às paredes laterais considerando posição e orientação do feixe do robô
       const centerY =
         arena.mode === 'corridor'
-          ? 130 + Math.sin(x / 85) * 38
-          : arena.targetY + Math.sin(x / 95) * 28;
-      const offsetY = y - centerY;
-      // dist_left alto quando perto da parede superior/esquerda; dist_right alto quando perto da parede inferior/direita
+          ? 130 + Math.sin(x / 85) * 24
+          : arena.targetY + Math.sin(x / 95) * 18;
+      const headingLookaheadY = Math.sin((angleDeg * Math.PI) / 180) * 55;
+      const offsetY = y + headingLookaheadY - centerY;
+      // dist_left alto quando apontando/perto da parede superior; dist_right alto quando apontando/perto da parede inferior
       sensors.dist_left = Number(Math.max(0, Math.min(1, 0.5 - offsetY / 90)).toFixed(3));
       sensors.dist_right = Number(Math.max(0, Math.min(1, 0.5 + offsetY / 90)).toFixed(3));
 

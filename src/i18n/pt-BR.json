@@ -116,19 +116,102 @@
     "sensorsTelemetry": "Leitura dos Sensores (Tick Atual)",
     "actionsTelemetry": "Decisão da Rede (Saídas)"
   },
+  "levels": {
+    "heading": "Fases da Missão (1 a 5) — Progresso e Tutorial",
+    "level1": "Fase 1 — Primeiro passo (Perceptron 1→1)",
+    "level2": "Fase 2 — Porta lógica (Bias e separação linear 2→1)",
+    "level3": "Fase 3 — Corredor (Camada oculta 3→4→3)",
+    "level4": "Fase 4 — O XOR (Backpropagation 2→2→1)",
+    "level5": "Fase 5 — Labirinto (Aprendizado por reforço 4→6→3)",
+    "locked": "Bloqueada",
+    "unlocked": "Liberada",
+    "totalStars": "Total de Estrelas: {stars} / 15",
+    "loadIdealBtn": "Montar Rede Ideal da Fase",
+    "tutorialHeading": "Tutorial Guiado (Aprenda Fazendo, Nomeie Depois)",
+    "datasetHeading": "Tabela de Exemplos Supervisionados (Situação → Ação Correta)",
+    "rewardHeading": "Regras de Recompensa (Aprendizado por Reforço — Fase 5)",
+    "inputsCol": "Sensores (Entradas)",
+    "targetsCol": "Ação Esperada (Saídas)",
+    "glossaryBtn": "Glossário de ML (RF-10)",
+    "quizBtn": "Quiz Final (5 Perguntas)",
+    "glossaryTitle": "Glossário de Aprendizado de Máquina",
+    "quizTitle": "Quiz Final de Verificação (5 Conceitos do SDD)",
+    "quizScore": "Pontuação no Quiz: {score} / 5",
+    "glossaryItems": [
+      {
+        "term": "Neurônio Artificial (Perceptron)",
+        "def": "Unidade que recebe entradas, multiplica cada uma por um peso (w), soma o bias (b) e aplica uma função de ativação."
+      },
+      {
+        "term": "Peso (Weight) e Bias (Limiar)",
+        "def": "O peso define a importância e o sinal (+ ou −) de uma conexão; o bias desloca o limiar de disparo do neurônio."
+      },
+      {
+        "term": "Camada Oculta e Função de Ativação",
+        "def": "Camada intermediária que, combinada com ativações não lineares (ReLU, sigmoide, tanh), resolve problemas não separáveis por uma única reta, como o XOR."
+      },
+      {
+        "term": "Loss (Perda), Underfitting e Overfitting",
+        "def": "A loss mede o erro da rede. Underfitting ocorre quando a rede é simples demais ou treinou pouco; overfitting ocorre quando decora ruído sem generalizar."
+      },
+      {
+        "term": "Aprendizado Supervisionado vs. Reforço",
+        "def": "No supervisionado a rede aprende imitando exemplos rotulados; no reforço aprende por tentativa e erro guiada por recompensas e penalidades."
+      }
+    ],
+    "quizQuestions": [
+      {
+        "q": "1. O que faz um neurônio artificial antes de aplicar a função de ativação?",
+        "options": [
+          "Calcula a soma ponderada das entradas multiplicadas pelos pesos mais o bias",
+          "Escolhe uma ação totalmente aleatória sem usar as entradas",
+          "Apaga os sensores da arena"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "2. Por que a porta XOR (Fase 4) precisa de uma camada oculta?",
+        "options": [
+          "Porque não é linearmente separável por um único neurônio",
+          "Porque tem apenas 1 sensor de entrada",
+          "Porque o bias não funciona em portas lógicas"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "3. O que acontece se a taxa de aprendizado (learning rate) for alta demais?",
+        "options": [
+          "Os pesos dão passos grandes demais e a loss pode oscilar sem convergir",
+          "O navegador desliga a tela",
+          "O número de sensores dobra automaticamente"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "4. Como reconhecemos que a rede está aprendendo bem no gráfico de Loss?",
+        "options": [
+          "A curva de loss diminui ao longo das épocas até ficar abaixo da meta",
+          "A curva de loss sobe infinitamente",
+          "A loss permanece sempre em 1,0"
+        ],
+        "correct": 0
+      },
+      {
+        "q": "5. Qual a diferença entre as Fases 1–4 (Supervisionado) e a Fase 5 (Reforço)?",
+        "options": [
+          "Nas Fases 1–4 a rede imita exemplos prontos; na Fase 5 aprende maximizando recompensas e evitando penalidades",
+          "Na Fase 5 não existem sensores nem ações",
+          "O aprendizado supervisionado não usa pesos"
+        ],
+        "correct": 0
+      }
+    ]
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",
     "train": "3. Treinar (TensorFlow.js Worker)",
     "test": "4. Testar (Arena 2D)"
-  },
-  "levels": {
-    "heading": "Fases do Protótipo (MVP)",
-    "level1": "Fase 1 — Primeiro passo (Perceptron 1→1)",
-    "level2": "Fase 2 — Porta lógica (Bias e separação linear 2→1)",
-    "level3": "Fase 3 — Corredor (Camada oculta 3→4→3)",
-    "level4": "Fase 4 — O XOR (Backpropagation 2→2→1)",
-    "level5": "Fase 5 — Labirinto (Aprendizado por reforço 4→6→3)"
   },
   "actions": {
     "start": "Começar Fase 1",

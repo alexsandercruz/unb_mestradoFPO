@@ -4,19 +4,14 @@ import { useGameStore } from './store/useGameStore';
 import { NeuronEditor } from './features/editor/NeuronEditor';
 import { ParamsPanel } from './features/params/ParamsPanel';
 import { ArenaView } from './features/arena/ArenaView';
-import { DatasetSample } from './core/nn-core';
-
-const DEFAULT_XOR_DATASET: DatasetSample[] = [
-  { inputs: [0, 0], targets: [0] },
-  { inputs: [0, 1], targets: [1] },
-  { inputs: [1, 0], targets: [1] },
-  { inputs: [1, 1], targets: [0] },
-];
+import { LevelsPanel, getLevelByNumber } from './features/levels/LevelsPanelWrapper';
 
 export function App(): React.JSX.Element {
   const {
     locale,
     activeLevelId,
+    unlockedUpToLevel,
+    starsByLevel,
     authSession,
     topology,
     parameters,
@@ -27,6 +22,9 @@ export function App(): React.JSX.Element {
     useBias,
     setLocale,
     setActiveLevelId,
+    loadIdealNetworkForLevel,
+    recordLevelCompletion,
+    setLastTrainingLoss,
     setTopology,
     setParameters,
     setLearningRate,
@@ -45,13 +43,7 @@ export function App(): React.JSX.Element {
     }
   }, [authSession, loginAnonymously]);
 
-  const levels = [
-    { id: 1, label: t.levels.level1 },
-    { id: 2, label: t.levels.level2 },
-    { id: 3, label: t.levels.level3 },
-    { id: 4, label: t.levels.level4 },
-    { id: 5, label: t.levels.level5 },
-  ];
+  const activeLevel = getLevelByNumber(activeLevelId);
 
   return (
     <div className="app-shell">
@@ -125,6 +117,15 @@ export function App(): React.JSX.Element {
           </div>
         </section>
 
+        <LevelsPanel
+          locale={locale}
+          activeLevelNumber={activeLevelId}
+          unlockedUpTo={unlockedUpToLevel}
+          starsByLevel={starsByLevel}
+          onSelectLevel={setActiveLevelId}
+          onLoadIdealNetwork={loadIdealNetworkForLevel}
+        />
+
         <NeuronEditor
           locale={locale}
           topology={topology}
@@ -132,10 +133,10 @@ export function App(): React.JSX.Element {
           activation={activation}
           useBias={useBias}
           limits={{
-            allowedInputs: ['dist_front', 'floor_light', 'dist_left', 'dist_right', 'target_angle'],
-            allowedOutputs: ['jump', 'walk', 'turn_left', 'turn_right'],
-            maxHiddenLayers: 2,
-            maxHiddenNeurons: 6,
+            allowedInputs: activeLevel.allowedInputs,
+            allowedOutputs: activeLevel.allowedOutputs,
+            maxHiddenLayers: Math.max(1, activeLevel.maxHiddenLayers),
+            maxHiddenNeurons: Math.max(2, activeLevel.maxHiddenNeurons),
           }}
           onChangeTopology={setTopology}
         />
@@ -149,8 +150,8 @@ export function App(): React.JSX.Element {
           activation={activation}
           weightInit={weightInit}
           useBias={useBias}
-          dataset={DEFAULT_XOR_DATASET}
-          targetLoss={0.05}
+          dataset={activeLevel.dataset}
+          targetLoss={activeLevel.targetLoss}
           allowManualWeights={activeLevelId <= 2}
           isReinforcementLevel={activeLevelId === 5}
           onChangeLearningRate={setLearningRate}
@@ -159,6 +160,7 @@ export function App(): React.JSX.Element {
           onChangeWeightInit={setWeightInit}
           onChangeUseBias={setUseBias}
           onChangeParameters={setParameters}
+          onTrainingMetricUpdate={(_ep, loss) => setLastTrainingLoss(loss)}
         />
 
         <ArenaView
@@ -168,27 +170,11 @@ export function App(): React.JSX.Element {
           parameters={parameters}
           activation={activation}
           useBias={useBias}
+          arenaMap={activeLevel.arena}
+          onEpisodeComplete={(res) => {
+            recordLevelCompletion(res.outcome === 'success');
+          }}
         />
-
-        <section className="levels-card" aria-labelledby="levels-heading">
-          <h2 id="levels-heading">{t.levels.heading}</h2>
-          <ul className="levels-list">
-            {levels.map((lvl) => (
-              <li
-                key={lvl.id}
-                className={`level-item ${activeLevelId === lvl.id ? 'active' : ''}`}
-                onClick={() => setActiveLevelId(lvl.id)}
-              >
-                <span>{lvl.label}</span>
-              </li>
-            ))}
-          </ul>
-          <div>
-            <button type="button" className="primary-btn" onClick={() => setActiveLevelId(1)}>
-              {t.actions.start}
-            </button>
-          </div>
-        </section>
       </main>
     </div>
   );
