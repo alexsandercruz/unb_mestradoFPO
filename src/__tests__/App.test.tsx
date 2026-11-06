@@ -7,7 +7,16 @@ import { countHiddenNeurons } from '../core/nn-core';
 
 describe('T1 Scaffold — NeuroBot Initial Screen & Core Stubs', () => {
   beforeEach(() => {
-    useGameStore.setState({ locale: 'pt-BR', activeLevelId: 1 });
+    useGameStore.setState({
+      locale: 'pt-BR',
+      activeLevelId: 1,
+      authSession: {
+        uid: 'anon_test_user',
+        isAnonymous: true,
+        displayName: 'Cientista Anônimo',
+        email: null,
+      },
+    });
   });
 
   it('renders initial screen in pt-BR and switches to en via i18n', () => {
@@ -42,4 +51,3 @@ describe('T1 Scaffold — NeuroBot Initial Screen & Core Stubs', () => {
     ).toBe(2);
   });
 });
-

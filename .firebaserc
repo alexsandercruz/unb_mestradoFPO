@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "neurobot-dev",
+    "dev": "neurobot-dev",
+    "prod": "neurobot-prod"
+  }
+}
+

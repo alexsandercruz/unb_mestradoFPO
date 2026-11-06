@@ -8,6 +8,14 @@
     "LocaleEn": "English",
     "statusReady": "Browser machine learning environment ready"
   },
+  "auth": {
+    "emulatorActive": "Firebase Emulator Active",
+    "anonymousBadge": "Anonymous Account",
+    "googleBadge": "Google Account Linked",
+    "uidLabel": "UID",
+    "signInAnonymous": "Sign in Anonymously",
+    "linkGoogle": "Link Google Account"
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",
@@ -27,4 +35,3 @@
     "glossary": "ML Glossary"
   }
 }
-

@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { getDictionary, Locale } from './i18n';
 import { useGameStore } from './store/useGameStore';
 
 export function App(): React.JSX.Element {
-  const { locale, activeLevelId, setLocale, setActiveLevelId } = useGameStore();
+  const {
+    locale,
+    activeLevelId,
+    authSession,
+    setLocale,
+    setActiveLevelId,
+    loginAnonymously,
+    linkGoogleAccount,
+  } = useGameStore();
   const t = getDictionary(locale);
+
+  useEffect(() => {
+    if (!authSession) {
+      void loginAnonymously();
+    }
+  }, [authSession, loginAnonymously]);
 
   const levels = [
     { id: 1, label: t.levels.level1 },
@@ -27,17 +41,50 @@ export function App(): React.JSX.Element {
           </div>
         </div>
 
-        <div className="locale-switcher">
-          <label htmlFor="locale-select">{t.app.languageLabel}:</label>
-          <select
-            id="locale-select"
-            className="locale-select"
-            value={locale}
-            onChange={(e) => setLocale(e.target.value as Locale)}
-          >
-            <option value="pt-BR">{t.app.LocalePt}</option>
-            <option value="en">{t.app.LocaleEn}</option>
-          </select>
+        <div className="header-controls">
+          <div className="auth-bar" data-testid="auth-bar">
+            <span className="emulator-badge">{t.auth.emulatorActive}</span>
+            {authSession ? (
+              <>
+                <span className="auth-status-badge" data-testid="auth-status-badge">
+                  {authSession.isAnonymous ? t.auth.anonymousBadge : t.auth.googleBadge}
+                </span>
+                <code className="uid-pill" data-testid="auth-uid">
+                  {t.auth.uidLabel}: {authSession.uid}
+                </code>
+                {authSession.isAnonymous && (
+                  <button
+                    type="button"
+                    className="secondary-btn"
+                    onClick={() => void linkGoogleAccount()}
+                  >
+                    {t.auth.linkGoogle}
+                  </button>
+                )}
+              </>
+            ) : (
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={() => void loginAnonymously()}
+              >
+                {t.auth.signInAnonymous}
+              </button>
+            )}
+          </div>
+
+          <div className="locale-switcher">
+            <label htmlFor="locale-select">{t.app.languageLabel}:</label>
+            <select
+              id="locale-select"
+              className="locale-select"
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as Locale)}
+            >
+              <option value="pt-BR">{t.app.LocalePt}</option>
+              <option value="en">{t.app.LocaleEn}</option>
+            </select>
+          </div>
         </div>
       </header>
 
@@ -78,4 +125,3 @@ export function App(): React.JSX.Element {
 }
 
 export default App;
-

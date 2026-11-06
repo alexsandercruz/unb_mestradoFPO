@@ -50,6 +50,64 @@ select {
   border-bottom: 1px solid var(--border-color);
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.auth-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.65rem;
+}
+
+.emulator-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-positive);
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+
+.auth-status-badge {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-success);
+}
+
+.uid-pill {
+  font-size: 0.78rem;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.secondary-btn {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.45rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  border-color: var(--accent-positive);
+}
+
 .brand-badge {
   display: inline-flex;
   align-items: center;
@@ -172,8 +230,8 @@ select {
 }
 
 .primary-btn:focus-visible,
+.secondary-btn:focus-visible,
 .locale-select:focus-visible {
   outline: 3px solid var(--accent-negative);
   outline-offset: 2px;
 }
-

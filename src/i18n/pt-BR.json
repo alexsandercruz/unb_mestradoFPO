@@ -8,6 +8,14 @@
     "LocaleEn": "English",
     "statusReady": "Ambiente pronto para aprendizado de máquina no navegador"
   },
+  "auth": {
+    "emulatorActive": "Emulador Firebase Ativo",
+    "anonymousBadge": "Conta Anônima",
+    "googleBadge": "Conta Google Vinculada",
+    "uidLabel": "UID",
+    "signInAnonymous": "Entrar como Anônimo",
+    "linkGoogle": "Vincular Conta Google"
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",
@@ -27,4 +35,3 @@
     "glossary": "Glossário de ML"
   }
 }
-
