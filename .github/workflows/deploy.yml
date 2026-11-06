@@ -1,0 +1,53 @@
+name: NeuroBot CI/CD & Firebase Hosting Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_and_test:
+    name: Lint, Test & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Unit & Coverage Tests (Vitest)
+        run: npm run test:coverage
+
+      - name: Build Production Bundle (Vite)
+        run: npm run build
+
+      - name: Deploy Preview Channel on Pull Request (neurobot-dev)
+        if: github.event_name == 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEUROBOT_DEV }}
+          projectId: neurobot-dev
+
+      - name: Deploy Production on Merge to main (neurobot-prod)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEUROBOT_PROD }}
+          channelId: live
+          projectId: neurobot-prod
+
