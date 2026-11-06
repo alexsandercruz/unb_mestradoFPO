@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "NeuroBot",
+    "subtitle": "Interactive Neural Network Lab",
+    "description": "Connect neurons, tune hyperparameters, train your network, and guide the robot through the 2D arena.",
+    "languageLabel": "Language",
+    "LocalePt": "Português (BR)",
+    "LocaleEn": "English",
+    "statusReady": "Browser machine learning environment ready"
+  },
+  "steps": {
+    "build": "1. Build (Neuron Editor)",
+    "tune": "2. Tune (Parameters Panel)",
+    "train": "3. Train (TensorFlow.js Worker)",
+    "test": "4. Test (2D Arena)"
+  },
+  "levels": {
+    "heading": "Prototype Levels (MVP)",
+    "level1": "Level 1 — First Step (Perceptron 1→1)",
+    "level2": "Level 2 — Logic Gate (Bias & linear separation 2→1)",
+    "level3": "Level 3 — Corridor (Hidden layer 3→4→3)",
+    "level4": "Level 4 — The XOR (Backpropagation 2→2→1)",
+    "level5": "Level 5 — Maze (Reinforcement learning 4→6→3)"
+  },
+  "actions": {
+    "start": "Start Level 1",
+    "glossary": "ML Glossary"
+  }
+}
+

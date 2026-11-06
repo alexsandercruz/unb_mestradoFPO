@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "NeuroBot",
+    "subtitle": "Laboratório Interativo de Redes Neurais",
+    "description": "Monte neurônios, ajuste hiperparâmetros, treine sua rede e guie o robô pela arena 2D.",
+    "languageLabel": "Idioma",
+    "LocalePt": "Português (BR)",
+    "LocaleEn": "English",
+    "statusReady": "Ambiente pronto para aprendizado de máquina no navegador"
+  },
+  "steps": {
+    "build": "1. Montar (Editor de Neurônios)",
+    "tune": "2. Ajustar (Painel de Parâmetros)",
+    "train": "3. Treinar (TensorFlow.js Worker)",
+    "test": "4. Testar (Arena 2D)"
+  },
+  "levels": {
+    "heading": "Fases do Protótipo (MVP)",
+    "level1": "Fase 1 — Primeiro passo (Perceptron 1→1)",
+    "level2": "Fase 2 — Porta lógica (Bias e separação linear 2→1)",
+    "level3": "Fase 3 — Corredor (Camada oculta 3→4→3)",
+    "level4": "Fase 4 — O XOR (Backpropagation 2→2→1)",
+    "level5": "Fase 5 — Labirinto (Aprendizado por reforço 4→6→3)"
+  },
+  "actions": {
+    "start": "Começar Fase 1",
+    "glossary": "Glossário de ML"
+  }
+}
+
