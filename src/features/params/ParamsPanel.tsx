@@ -19,6 +19,7 @@ import {
   initializeNetworkParameters,
 } from '../../core/nn-core';
 import { getDictionary, Locale } from '../../i18n';
+import { trackAnalyticsEvent } from '../../services/firebase';
 import {
   LossPoint,
   TrainingSessionController,
@@ -106,6 +107,10 @@ export function ParamsPanel({
         setCurrentEpoch(msg.epoch);
         setCurrentLoss(msg.loss);
         onChangeParameters(msg.parameters);
+        trackAnalyticsEvent('train_run', {
+          epochs: msg.epoch,
+          finalLoss: Number(msg.loss.toFixed(4)),
+        });
         onTrainingMetricUpdate?.(msg.epoch, msg.loss, 'completed');
       }
     });
@@ -120,6 +125,7 @@ export function ParamsPanel({
     setOpenHint((prev) => {
       const next = prev === paramId ? null : paramId;
       if (next) {
+        trackAnalyticsEvent('hint_open', { paramId });
         onHintOpen?.(paramId);
       }
       return next;

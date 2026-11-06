@@ -224,5 +224,15 @@
   "actions": {
     "start": "Começar Fase 1",
     "glossary": "Glossário de ML"
+  },
+  "polish": {
+    "skipToContent": "Pular para o conteúdo principal",
+    "pwaReady": "PWA Offline Pronto (RNF-06)",
+    "pwaOfflineMode": "Modo Offline Ativo — Sincronizará ao reconectar",
+    "wcagBadge": "Acessibilidade WCAG 2.1 AA (RNF-04)",
+    "lgpdTitle": "Privacidade LGPD & Aviso para Menores (RNF-05)",
+    "lgpdText": "O modo anônimo não coleta dados pessoais identificáveis; apenas métricas agregadas de aprendizagem (level_start, train_run, level_complete, hint_open) e progresso técnico. Estudantes menores de 18 anos devem consultar pais ou responsáveis antes de vincular uma conta Google.",
+    "lgpdAcceptBtn": "Entendi e Concordar",
+    "analyticsTitle": "Telemetria Pedagógica (Eventos Analytics: {count})"
   }
 }

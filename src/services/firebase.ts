@@ -57,6 +57,14 @@ export interface SavedNetworkDoc {
   savedAt: string;
 }
 
+export type AnalyticsEventName = 'level_start' | 'train_run' | 'level_complete' | 'hint_open';
+
+export interface AnalyticsEventRecord {
+  name: AnalyticsEventName;
+  params: Record<string, string | number | boolean>;
+  timestamp: string;
+}
+
 export class FirebasePermissionError extends Error {
   public readonly code = 'permission-denied';
   constructor(message = 'Missing or insufficient permissions.') {
@@ -108,6 +116,7 @@ export function evaluateFirestoreRules(
 
 const STORAGE_AUTH_KEY = 'neurobot_emulator_auth_v1';
 const STORAGE_DB_KEY = 'neurobot_emulator_firestore_v1';
+const STORAGE_ANALYTICS_KEY = 'neurobot_analytics_events_v1';
 
 function loadEmulatorDb(): Record<string, unknown> {
   try {
@@ -123,6 +132,43 @@ function saveEmulatorDb(db: Record<string, unknown>): void {
     localStorage.setItem(STORAGE_DB_KEY, JSON.stringify(db));
   } catch {
     // ignore
+  }
+}
+
+/**
+ * Registra eventos do Firebase Analytics (level_start, train_run, level_complete, hint_open)
+ * sem coletar dados pessoais identificáveis (conformidade LGPD RNF-05).
+ */
+export function trackAnalyticsEvent(
+  name: AnalyticsEventName,
+  params: Record<string, string | number | boolean> = {},
+): AnalyticsEventRecord {
+  const record: AnalyticsEventRecord = {
+    name,
+    params,
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    const existingRaw = localStorage.getItem(STORAGE_ANALYTICS_KEY);
+    const list: AnalyticsEventRecord[] = existingRaw
+      ? (JSON.parse(existingRaw) as AnalyticsEventRecord[])
+      : [];
+    list.push(record);
+    localStorage.setItem(STORAGE_ANALYTICS_KEY, JSON.stringify(list.slice(-100)));
+  } catch {
+    // ignore
+  }
+
+  return record;
+}
+
+export function getAnalyticsEvents(): AnalyticsEventRecord[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_ANALYTICS_KEY);
+    return raw ? (JSON.parse(raw) as AnalyticsEventRecord[]) : [];
+  } catch {
+    return [];
   }
 }
 
@@ -208,7 +254,10 @@ export async function signInAnonymouslyUser(): Promise<AuthContext> {
 
   let uid = `anon_${Math.random().toString(36).slice(2, 10)}`;
 
-  if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' && import.meta.env.VITE_FIREBASE_API_KEY) {
+  if (
+    import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' &&
+    import.meta.env.VITE_FIREBASE_API_KEY
+  ) {
     try {
       const { auth } = initFirebaseClient();
       const cred = await fbSignInAnonymously(auth);
@@ -248,7 +297,10 @@ export async function linkAnonymousWithGoogle(
   let displayName = googleProfile?.displayName || 'Explorador Google';
   let email: string | null = googleProfile?.email || 'estudante@escola.edu.br';
 
-  if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' && import.meta.env.VITE_FIREBASE_API_KEY) {
+  if (
+    import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' &&
+    import.meta.env.VITE_FIREBASE_API_KEY
+  ) {
     try {
       const { auth } = initFirebaseClient();
       if (auth.currentUser) {
@@ -312,7 +364,10 @@ export async function emulatorReadDoc<T>(
     return value as T;
   }
 
-  if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' && import.meta.env.VITE_FIREBASE_API_KEY) {
+  if (
+    import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' &&
+    import.meta.env.VITE_FIREBASE_API_KEY
+  ) {
     try {
       const { db: firestore } = initFirebaseClient();
       const snap = await getDoc(doc(firestore, normalized));
@@ -350,7 +405,10 @@ export async function emulatorWriteDoc<T>(
   db[normalized] = data;
   saveEmulatorDb(db);
 
-  if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' && import.meta.env.VITE_FIREBASE_API_KEY) {
+  if (
+    import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'false' &&
+    import.meta.env.VITE_FIREBASE_API_KEY
+  ) {
     try {
       const { db: firestore } = initFirebaseClient();
       await setDoc(doc(firestore, normalized), data as Record<string, unknown>, { merge: true });
@@ -461,6 +519,7 @@ export function clearEmulatorStorage(): void {
   try {
     localStorage.removeItem(STORAGE_AUTH_KEY);
     localStorage.removeItem(STORAGE_DB_KEY);
+    localStorage.removeItem(STORAGE_ANALYTICS_KEY);
   } catch {
     // ignore
   }

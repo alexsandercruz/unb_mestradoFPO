@@ -1,0 +1,19 @@
+{
+  "name": "NeuroBot — Laboratório Interativo de Redes Neurais",
+  "short_name": "NeuroBot",
+  "description": "Jogo educativo de aprendizado de máquina: monte neurônios, treine com TensorFlow.js e supere desafios na arena 2D.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#38bdf8",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

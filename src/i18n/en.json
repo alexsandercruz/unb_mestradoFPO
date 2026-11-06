@@ -224,5 +224,15 @@
   "actions": {
     "start": "Start Level 1",
     "glossary": "ML Glossary"
+  },
+  "polish": {
+    "skipToContent": "Skip to main content",
+    "pwaReady": "PWA Offline Ready (RNF-06)",
+    "pwaOfflineMode": "Offline Mode Active — Will sync upon reconnecting",
+    "wcagBadge": "WCAG 2.1 AA Accessible (RNF-04)",
+    "lgpdTitle": "LGPD Privacy & Minors Notice (RNF-05)",
+    "lgpdText": "Anonymous mode collects zero personally identifiable data; only learning telemetry (level_start, train_run, level_complete, hint_open) and technical progress. Students under 18 should consult parents or guardians before linking a Google account.",
+    "lgpdAcceptBtn": "I Understand & Agree",
+    "analyticsTitle": "Pedagogical Telemetry (Analytics Events: {count})"
   }
 }

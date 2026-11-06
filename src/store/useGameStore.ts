@@ -10,6 +10,7 @@ import {
   saveNetworkToFirestore,
   listSavedNetworksForLevel,
   persistAuthSession,
+  trackAnalyticsEvent,
 } from '../services/firebase';
 import {
   ActivationFunction,
@@ -86,6 +87,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   setLocale: (locale) => set({ locale }),
   setActiveLevelId: async (activeLevelId) => {
     const level = getLevelByNumber(activeLevelId);
+    trackAnalyticsEvent('level_start', { levelId: level.id, levelNumber: activeLevelId });
     const session = get().authSession;
     const savedNetworks = session
       ? await listSavedNetworksForLevel(session, level.id)
@@ -134,6 +136,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({
         starsByLevel: nextStarsMap,
         unlockedUpToLevel: nextUnlocked,
+      });
+
+      trackAnalyticsEvent('level_complete', {
+        levelId: level.id,
+        stars: bestStars,
+        finalLoss: Number(effectiveLoss.toFixed(4)),
       });
 
       const session = state.authSession ?? (await signInAnonymouslyUser());
