@@ -1,34 +1,20 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { getDictionary, Locale } from './i18n';
 import { useGameStore } from './store/useGameStore';
-import { forwardPass, NetworkTopology } from './core/nn-core';
-
-const DEMO_XOR_TOPOLOGY: NetworkTopology = {
-  inputs: ['in1', 'in2'],
-  hidden: [
-    [
-      { id: 'h1', activation: 'sigmoid' },
-      { id: 'h2', activation: 'sigmoid' },
-    ],
-  ],
-  outputs: ['out'],
-  links: [
-    ['in1', 'h1'],
-    ['in2', 'h1'],
-    ['in1', 'h2'],
-    ['in2', 'h2'],
-    ['h1', 'out'],
-    ['h2', 'out'],
-  ],
-};
+import { NeuronEditor } from './features/editor/NeuronEditor';
 
 export function App(): React.JSX.Element {
   const {
     locale,
     activeLevelId,
     authSession,
+    topology,
+    parameters,
+    activation,
+    useBias,
     setLocale,
     setActiveLevelId,
+    setTopology,
     loginAnonymously,
     linkGoogleAccount,
   } = useGameStore();
@@ -39,29 +25,6 @@ export function App(): React.JSX.Element {
       void loginAnonymously();
     }
   }, [authSession, loginAnonymously]);
-
-  const demoForward = useMemo(() => {
-    return forwardPass(
-      DEMO_XOR_TOPOLOGY,
-      {
-        linkWeights: {
-          'in1->h1': 6.0,
-          'in2->h1': 6.0,
-          'in1->h2': 6.0,
-          'in2->h2': 6.0,
-          'h1->out': 8.0,
-          'h2->out': -8.0,
-        },
-        biases: {
-          h1: -3.0,
-          h2: -9.0,
-          out: -3.8,
-        },
-      },
-      { in1: 1, in2: 0 },
-      { useBias: true, outputActivation: 'sigmoid' },
-    );
-  }, []);
 
   const levels = [
     { id: 1, label: t.levels.level1 },
@@ -143,19 +106,20 @@ export function App(): React.JSX.Element {
           </div>
         </section>
 
-        <section className="levels-card" aria-labelledby="nncore-heading">
-          <h2 id="nncore-heading">{t.nnCore.heading}</h2>
-          <span className="status-pill">{t.nnCore.convergenceBadge}</span>
-          <div className="steps-grid">
-            <div className="step-card">{t.nnCore.forwardLabel}</div>
-            <div className="step-card">
-              {t.nnCore.weightedSumLabel}: {demoForward.neurons.out.weightedSum.toFixed(3)}
-            </div>
-            <div className="step-card">
-              {t.nnCore.activationLabel}: {demoForward.outputs.out.toFixed(4)}
-            </div>
-          </div>
-        </section>
+        <NeuronEditor
+          locale={locale}
+          topology={topology}
+          parameters={parameters}
+          activation={activation}
+          useBias={useBias}
+          limits={{
+            allowedInputs: ['dist_front', 'floor_light', 'dist_left', 'dist_right', 'target_angle'],
+            allowedOutputs: ['jump', 'walk', 'turn_left', 'turn_right'],
+            maxHiddenLayers: 2,
+            maxHiddenNeurons: 6,
+          }}
+          onChangeTopology={setTopology}
+        />
 
         <section className="levels-card" aria-labelledby="levels-heading">
           <h2 id="levels-heading">{t.levels.heading}</h2>

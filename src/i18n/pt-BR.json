@@ -23,6 +23,42 @@
     "activationLabel": "Saída Ativada (a)",
     "convergenceBadge": "Portas AND, OR e XOR convergindo com loss < 0,05"
   },
+  "editor": {
+    "title": "1. Editor de Neurônios",
+    "instructions": "Arraste ou clique/use o teclado (Enter/Espaço) para adicionar neurônios e ligar cabos. Clique num neurônio de origem e depois no de destino para criar ou remover um cabo.",
+    "inputsPalette": "Sensores (Entradas)",
+    "hiddenPalette": "Camadas Ocultas",
+    "outputsPalette": "Ações (Saídas)",
+    "addHiddenL1": "+ Neurônio Camada Oculta 1",
+    "addHiddenL2": "+ Neurônio Camada Oculta 2",
+    "connectAll": "Conectar Camadas Automaticamente",
+    "clearLinks": "Limpar Cabos",
+    "limitsInfo": "Limites da fase: máx. {maxHidden} neurônios ocultos | ativação: {activation}",
+    "legendPositive": " Azul sólido (+) = Peso Positivo",
+    "legendNegative": " Laranja tracejado (−) = Peso Negativo",
+    "legendThickness": "Espessura = Magnitude |w|",
+    "inspectorTitle": "Inspeção do Neurônio em Tempo Real (RF-06)",
+    "inspectorEmpty": "Passe o mouse ou foque (Tab) em um neurônio para ver a soma ponderada (z) e a saída da ativação (a).",
+    "weightedSum": "Soma ponderada (z)",
+    "activatedOutput": "Saída da ativação (a)",
+    "activationFn": "Função de ativação",
+    "selectedSource": "Origem selecionada para ligar cabo: {id} (escolha o destino com clique ou Enter)",
+    "topologyJsonTitle": "Topologia Exportada (JSON)",
+    "removeNeuron": "Remover neurônio",
+    "sensors": {
+      "dist_front": "Distância à frente",
+      "floor_light": "Cor do chão (luz)",
+      "dist_left": "Distância à esquerda",
+      "dist_right": "Distância à direita",
+      "target_angle": "Ângulo até o alvo"
+    },
+    "actions": {
+      "jump": "Pular",
+      "walk": "Andar",
+      "turn_left": "Virar esquerda",
+      "turn_right": "Virar direita"
+    }
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",

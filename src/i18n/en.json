@@ -23,6 +23,42 @@
     "activationLabel": "Activated Output (a)",
     "convergenceBadge": "AND, OR & XOR gates converging with loss < 0.05"
   },
+  "editor": {
+    "title": "1. Neuron Editor",
+    "instructions": "Drag or click/use keyboard (Enter/Space) to add neurons and connect cables. Click a source neuron and then a target neuron to create or remove a cable.",
+    "inputsPalette": "Sensors (Inputs)",
+    "hiddenPalette": "Hidden Layers",
+    "outputsPalette": "Actions (Outputs)",
+    "addHiddenL1": "+ Hidden Layer 1 Neuron",
+    "addHiddenL2": "+ Hidden Layer 2 Neuron",
+    "connectAll": "Auto-Connect Layers",
+    "clearLinks": "Clear Cables",
+    "limitsInfo": "Level limits: max {maxHidden} hidden neurons | activation: {activation}",
+    "legendPositive": " Solid Blue (+) = Positive Weight",
+    "legendNegative": " Dashed Orange (−) = Negative Weight",
+    "legendThickness": "Thickness = Magnitude |w|",
+    "inspectorTitle": "Real-Time Neuron Inspection (RF-06)",
+    "inspectorEmpty": "Hover or focus (Tab) on a neuron to inspect its weighted sum (z) and activation output (a).",
+    "weightedSum": "Weighted sum (z)",
+    "activatedOutput": "Activation output (a)",
+    "activationFn": "Activation function",
+    "selectedSource": "Selected source for cable: {id} (pick target with click or Enter)",
+    "topologyJsonTitle": "Exported Topology (JSON)",
+    "removeNeuron": "Remove neuron",
+    "sensors": {
+      "dist_front": "Distance front",
+      "floor_light": "Floor light",
+      "dist_left": "Distance left",
+      "dist_right": "Distance right",
+      "target_angle": "Target angle"
+    },
+    "actions": {
+      "jump": "Jump",
+      "walk": "Walk",
+      "turn_left": "Turn left",
+      "turn_right": "Turn right"
+    }
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",
