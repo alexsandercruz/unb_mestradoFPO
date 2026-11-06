@@ -13,26 +13,81 @@
     "pt-BR": "Neurônio único, peso e limiar (Perceptron)",
     "en": "Single neuron, weight, and threshold (Perceptron)"
   },
-  "allowedInputs": ["dist_front"],
-  "allowedOutputs": ["jump"],
+  "allowedInputs": [
+    "dist_front"
+  ],
+  "allowedOutputs": [
+    "jump"
+  ],
   "maxHiddenLayers": 0,
   "maxHiddenNeurons": 0,
   "idealHiddenNeurons": 0,
   "defaultActivation": "step",
   "targetLoss": 0.05,
   "idealTopology": {
-    "inputs": ["dist_front"],
+    "inputs": [
+      "dist_front"
+    ],
     "hidden": [],
-    "outputs": ["jump"],
-    "links": [["dist_front", "jump"]]
+    "outputs": [
+      "jump"
+    ],
+    "links": [
+      [
+        "dist_front",
+        "jump"
+      ]
+    ]
   },
   "dataset": [
-    { "inputs": [0.0], "targets": [0] },
-    { "inputs": [0.15], "targets": [0] },
-    { "inputs": [0.28], "targets": [0] },
-    { "inputs": [0.68], "targets": [1] },
-    { "inputs": [0.85], "targets": [1] },
-    { "inputs": [1.0], "targets": [1] }
+    {
+      "inputs": [
+        0.0
+      ],
+      "targets": [
+        0
+      ]
+    },
+    {
+      "inputs": [
+        0.15
+      ],
+      "targets": [
+        0
+      ]
+    },
+    {
+      "inputs": [
+        0.28
+      ],
+      "targets": [
+        0
+      ]
+    },
+    {
+      "inputs": [
+        0.68
+      ],
+      "targets": [
+        1
+      ]
+    },
+    {
+      "inputs": [
+        0.85
+      ],
+      "targets": [
+        1
+      ]
+    },
+    {
+      "inputs": [
+        1.0
+      ],
+      "targets": [
+        1
+      ]
+    }
   ],
   "arena": {
     "mode": "box_jump",
@@ -45,10 +100,38 @@
     "targetY": 180,
     "maxTicks": 120,
     "obstacles": [
-      { "id": "box-1", "x": 150, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
-      { "id": "box-2", "x": 260, "y": 161, "width": 28, "height": 34, "lowObstacle": true },
-      { "id": "box-3", "x": 370, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
-      { "id": "box-4", "x": 475, "y": 161, "width": 30, "height": 34, "lowObstacle": true }
+      {
+        "id": "box-1",
+        "x": 150,
+        "y": 165,
+        "width": 26,
+        "height": 30,
+        "lowObstacle": true
+      },
+      {
+        "id": "box-2",
+        "x": 260,
+        "y": 161,
+        "width": 28,
+        "height": 34,
+        "lowObstacle": true
+      },
+      {
+        "id": "box-3",
+        "x": 370,
+        "y": 165,
+        "width": 26,
+        "height": 30,
+        "lowObstacle": true
+      },
+      {
+        "id": "box-4",
+        "x": 475,
+        "y": 161,
+        "width": 30,
+        "height": 34,
+        "lowObstacle": true
+      }
     ]
   },
   "tutorial": {
