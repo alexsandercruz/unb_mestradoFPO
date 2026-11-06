@@ -29,10 +29,5 @@ test.describe('NeuroBot E2E — Fase 1 (Primeiro passo com 4 obstáculos)', () =
     // Verifica que ganhou 3 estrelas (3 / 15) e liberou a Fase 2
     await expect(page.getByTestId('total-stars-badge')).toContainText('3 / 15');
     await expect(page.getByTestId('level-item-2')).toContainText('Liberada');
-
-    // Captura screenshot E2E da Fase 1 concluída
-    await page.screenshot({
-      fullPage: true,
-    });
   });
 });

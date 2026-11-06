@@ -10,9 +10,10 @@ firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
 
-#docs
-/docs/SDD.md
-/docs/implemetation_plan.md
+# docs
+docs
+SDD.md
+implemetation_plan.md
 
 # Dependencies & Build
 node_modules
@@ -20,6 +21,8 @@ dist
 dist-ssr
 coverage
 *.local
+*.tsbuildinfo
+.firebase/
 
 # Environment variables (secrets must never be committed)
 .env

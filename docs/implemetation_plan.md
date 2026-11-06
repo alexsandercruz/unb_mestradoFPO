@@ -80,6 +80,7 @@ neurobot/
 
 ### `T1` — Scaffold do Projeto
 - **Escopo**:
+  - Atualizar [docs/SDD.md](./SDD.md) com o conteúdo integral do SDD.
   - Inicializar projeto **Vite + React 18 + TypeScript (`strict: true`)**.
   - Configurar **ESLint**, **Prettier**, **Vitest** + **Testing Library** (com cobertura `@vitest/coverage-v8`).
   - Criar a árvore de diretórios da seção 4 (`src/core/{nn-core,simulation,scoring}`, `src/workers`, `src/features/{editor,params,arena,levels}`, `src/levels`, `src/services`, `src/store`, `src/i18n`).
