@@ -1,69 +1,30 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '../store/useGameStore';
-import { clearEmulatorStorage } from '../services/firebase';
+import { getIdealParametersForLevel, getUntunedParametersForLevel } from '../features/levels';
 
-describe('T8 Cloud Persistence — Save Progress, Save up to 10 Networks & Cross-Device Google Link', () => {
+describe('T8 State & Dynamic Loss Evaluation — Weight Tuning & Progression', () => {
   beforeEach(() => {
-    clearEmulatorStorage();
     useGameStore.setState({
       locale: 'pt-BR',
       activeLevelId: 1,
       unlockedUpToLevel: 1,
       starsByLevel: {},
-      savedNetworks: [],
-      authSession: null,
+      parameters: getUntunedParametersForLevel(1),
     });
   });
 
-  it('persists level progress & networks across page reloads and device switches after Google linking (RF-01, RF-08, RF-09)', async () => {
-    // 1. Login anônimo no Dispositivo A
-    const anonSession = await useGameStore.getState().loginAnonymously();
-    expect(anonSession.isAnonymous).toBe(true);
+  it('starts levels with high untuned loss and lowers loss below target when weights are tuned', async () => {
+    await useGameStore.getState().setActiveLevelId(1);
+    const initialLoss = useGameStore.getState().lastTrainingLoss;
+    expect(initialLoss).toBeGreaterThan(0.15);
 
-    // 2. Conclui a Fase 1 com 3 estrelas e salva uma rede customizada
-    const stars = await useGameStore.getState().recordLevelCompletion(true, 0.015);
+    // Quando o jogador ajusta os pesos para valores calibrados, a loss cai abaixo da meta (<= 0.05)
+    useGameStore.getState().setParameters(getIdealParametersForLevel(1));
+    const tunedLoss = useGameStore.getState().lastTrainingLoss;
+    expect(tunedLoss).toBeLessThan(0.05);
+
+    const stars = await useGameStore.getState().recordLevelCompletion(true);
     expect(stars).toBe(3);
-
-    const savedNet = await useGameStore.getState().saveCurrentNetwork('Minha Rede Campeã');
-    expect(savedNet.name).toBe('Minha Rede Campeã');
-    expect(useGameStore.getState().savedNetworks).toHaveLength(1);
-
-    // 3. Vincula a conta anônima ao Google preservando o UID (RF-01)
-    const googleSession = await useGameStore.getState().linkGoogleAccount({
-      displayName: 'Alexsander UnB',
-      email: 'alexsander@unb.br',
-    });
-    expect(googleSession?.uid).toBe(anonSession.uid);
-    expect(googleSession?.isAnonymous).toBe(false);
-
-    // 4. Simula recarregar a página / trocar para o Dispositivo B (zerando a store em memória)
-    useGameStore.setState({
-      unlockedUpToLevel: 1,
-      starsByLevel: {},
-      savedNetworks: [],
-      authSession: null,
-    });
-
-    // Faz login com a conta Google vinculada no Dispositivo B e hidrata da nuvem (Firestore)
-    await useGameStore.getState().hydrateFromCloud(googleSession!);
-
-    expect(useGameStore.getState().starsByLevel['01-first-step']).toBe(3);
     expect(useGameStore.getState().unlockedUpToLevel).toBe(2);
-    expect(useGameStore.getState().savedNetworks).toHaveLength(1);
-    expect(useGameStore.getState().savedNetworks[0].name).toBe('Minha Rede Campeã');
-  });
-
-  it('enforces the limit of at most 10 saved networks per level (RF-09)', async () => {
-    await useGameStore.getState().loginAnonymously();
-
-    for (let i = 1; i <= 10; i++) {
-      await useGameStore.getState().saveCurrentNetwork(`Rede #${i}`);
-    }
-    expect(useGameStore.getState().savedNetworks).toHaveLength(10);
-
-    await expect(
-      useGameStore.getState().saveCurrentNetwork('Rede #11 Excedente'),
-    ).rejects.toThrow(/Maximum of 10 saved networks/i);
   });
 });
-

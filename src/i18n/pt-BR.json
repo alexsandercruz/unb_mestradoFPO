@@ -134,7 +134,7 @@
     "locked": "Bloqueada",
     "unlocked": "Liberada",
     "totalStars": "Total de Estrelas: {stars} / 15",
-    "loadIdealBtn": "Montar Rede Ideal da Fase",
+    "loadIdealBtn": "Montar Topologia Base (Pesos Não Calibrados)",
     "tutorialHeading": "Tutorial Guiado (Aprenda Fazendo, Nomeie Depois)",
     "datasetHeading": "Tabela de Exemplos Supervisionados (Situação → Ação Correta)",
     "rewardHeading": "Regras de Recompensa (Aprendizado por Reforço — Fase 5)",

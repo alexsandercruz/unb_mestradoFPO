@@ -13,7 +13,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "firebase:login": "npx --yes firebase-tools login",
+    "deploy:hosting": "npm run build && npx --yes firebase-tools deploy --only hosting",
+    "deploy:all": "npm run build && npx --yes firebase-tools deploy --only hosting,firestore:rules"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^4.22.0",

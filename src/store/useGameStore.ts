@@ -1,45 +1,37 @@
 import { create } from 'zustand';
 import { Locale } from '../i18n';
-import {
-  AuthContext,
-  SavedNetworkDoc,
-  signInAnonymouslyUser,
-  linkAnonymousWithGoogle,
-  saveLevelProgressToFirestore,
-  loadUserProgressFromFirestore,
-  saveNetworkToFirestore,
-  listSavedNetworksForLevel,
-  persistAuthSession,
-  trackAnalyticsEvent,
-} from '../services/firebase';
+import { trackAnalyticsEvent } from '../services/firebase';
 import {
   ActivationFunction,
   NetworkParameters,
   NetworkTopology,
   WeightInitStrategy,
   countHiddenNeurons,
-  deserializeParameters,
+  evaluateDatasetLoss,
   initializeNetworkParameters,
-  serializeParameters,
 } from '../core/nn-core';
 import { calculateStars } from '../core/scoring';
 import {
-  LEVELS,
-  getIdealParametersForLevel,
+  getUntunedParametersForLevel,
   getLevelByNumber,
   LevelDefinition,
 } from '../features/levels';
 
 const LEVEL1 = getLevelByNumber(1);
+const INITIAL_PARAMS_L1 = getUntunedParametersForLevel(1);
+const INITIAL_LOSS_L1 = evaluateDatasetLoss(
+  LEVEL1.idealTopology,
+  INITIAL_PARAMS_L1,
+  LEVEL1.dataset,
+  { useBias: true, outputActivation: LEVEL1.defaultActivation },
+);
 
 export interface GameState {
   locale: Locale;
   activeLevelId: number;
   unlockedUpToLevel: number;
   starsByLevel: Record<string, 0 | 1 | 2 | 3>;
-  savedNetworks: SavedNetworkDoc[];
   lastTrainingLoss: number;
-  authSession: AuthContext | null;
   topology: NetworkTopology;
   parameters: NetworkParameters;
   learningRate: number;
@@ -51,9 +43,6 @@ export interface GameState {
   setActiveLevelId: (levelId: number) => Promise<void>;
   loadIdealNetworkForLevel: (level: LevelDefinition) => void;
   recordLevelCompletion: (completed: boolean, lossOverride?: number) => Promise<0 | 1 | 2 | 3>;
-  saveCurrentNetwork: (name: string) => Promise<SavedNetworkDoc>;
-  loadSavedNetwork: (doc: SavedNetworkDoc) => void;
-  hydrateFromCloud: (sessionOverride?: AuthContext) => Promise<void>;
   setLastTrainingLoss: (loss: number) => void;
   setTopology: (topology: NetworkTopology) => void;
   setParameters: (parameters: NetworkParameters) => void;
@@ -62,11 +51,6 @@ export interface GameState {
   setActivation: (activation: ActivationFunction) => void;
   setWeightInit: (weightInit: WeightInitStrategy) => void;
   setUseBias: (useBias: boolean) => void;
-  loginAnonymously: () => Promise<AuthContext>;
-  linkGoogleAccount: (profileOverride?: {
-    displayName: string;
-    email: string;
-  }) => Promise<AuthContext | null>;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -74,13 +58,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   activeLevelId: 1,
   unlockedUpToLevel: 1,
   starsByLevel: {},
-  savedNetworks: [],
-  lastTrainingLoss: 0.02,
-  authSession: null,
+  lastTrainingLoss: INITIAL_LOSS_L1,
   topology: LEVEL1.idealTopology,
-  parameters: getIdealParametersForLevel(1),
-  learningRate: 0.25,
-  epochs: 120,
+  parameters: INITIAL_PARAMS_L1,
+  learningRate: 0.3,
+  epochs: 180,
   activation: LEVEL1.defaultActivation,
   weightInit: 'deterministic',
   useBias: true,
@@ -88,25 +70,30 @@ export const useGameStore = create<GameState>((set, get) => ({
   setActiveLevelId: async (activeLevelId) => {
     const level = getLevelByNumber(activeLevelId);
     trackAnalyticsEvent('level_start', { levelId: level.id, levelNumber: activeLevelId });
-    const session = get().authSession;
-    const savedNetworks = session
-      ? await listSavedNetworksForLevel(session, level.id)
-      : [];
+    const untunedParams = getUntunedParametersForLevel(activeLevelId);
+    const initialLoss = evaluateDatasetLoss(level.idealTopology, untunedParams, level.dataset, {
+      useBias: true,
+      outputActivation: level.defaultActivation,
+    });
     set({
       activeLevelId,
       topology: level.idealTopology,
-      parameters: getIdealParametersForLevel(activeLevelId),
+      parameters: untunedParams,
       activation: level.defaultActivation,
-      lastTrainingLoss: level.targetLoss * 0.5,
-      savedNetworks,
+      lastTrainingLoss: initialLoss,
     });
   },
   loadIdealNetworkForLevel: (level) => {
+    const untunedParams = getUntunedParametersForLevel(level.levelNumber);
+    const initialLoss = evaluateDatasetLoss(level.idealTopology, untunedParams, level.dataset, {
+      useBias: true,
+      outputActivation: level.defaultActivation,
+    });
     set({
       topology: level.idealTopology,
-      parameters: getIdealParametersForLevel(level.levelNumber),
+      parameters: untunedParams,
       activation: level.defaultActivation,
-      lastTrainingLoss: level.targetLoss * 0.4,
+      lastTrainingLoss: initialLoss,
     });
   },
   recordLevelCompletion: async (completed, lossOverride) => {
@@ -143,88 +130,13 @@ export const useGameStore = create<GameState>((set, get) => ({
         stars: bestStars,
         finalLoss: Number(effectiveLoss.toFixed(4)),
       });
-
-      const session = state.authSession ?? (await signInAnonymouslyUser());
-      const totalStars = Object.values(nextStarsMap).reduce<number>((a, b) => a + b, 0);
-      await saveLevelProgressToFirestore(
-        session,
-        level.id,
-        {
-          stars: bestStars,
-          bestLoss: effectiveLoss,
-          neuronsUsed,
-          attempts: 1,
-          completedAt: new Date().toISOString(),
-        },
-        totalStars,
-        state.locale,
-      );
     }
     return stars;
-  },
-  saveCurrentNetwork: async (name) => {
-    const state = get();
-    const session = state.authSession ?? (await signInAnonymouslyUser());
-    const level = getLevelByNumber(state.activeLevelId);
-    const flatWeights = serializeParameters(state.topology, state.parameters);
-
-    const saved = await saveNetworkToFirestore(session, {
-      levelId: level.id,
-      name: name.trim() || `Rede ${level.title[state.locale]}`,
-      topology: state.topology,
-      weights: flatWeights,
-      params: {
-        learningRate: state.learningRate,
-        epochs: state.epochs,
-        activation: state.activation,
-        useBias: state.useBias,
-      },
-    });
-
-    const updatedList = await listSavedNetworksForLevel(session, level.id);
-    set({ authSession: session, savedNetworks: updatedList });
-    return saved;
-  },
-  loadSavedNetwork: (docItem) => {
-    const restoredParams = deserializeParameters(docItem.topology, docItem.weights);
-    set({
-      topology: docItem.topology,
-      parameters: restoredParams,
-      learningRate: docItem.params.learningRate,
-      epochs: docItem.params.epochs,
-      activation: docItem.params.activation as ActivationFunction,
-      useBias: docItem.params.useBias,
-    });
-  },
-  hydrateFromCloud: async (sessionOverride) => {
-    const session = sessionOverride ?? get().authSession ?? (await signInAnonymouslyUser());
-    persistAuthSession(session);
-    const { profile, progressByLevel } = await loadUserProgressFromFirestore(session);
-    const starsByLevel: Record<string, 0 | 1 | 2 | 3> = {};
-    let highestUnlocked = 1;
-
-    for (const lvl of LEVELS) {
-      const p = progressByLevel[lvl.id];
-      if (p && p.stars > 0) {
-        starsByLevel[lvl.id] = p.stars;
-        highestUnlocked = Math.min(5, Math.max(highestUnlocked, lvl.levelNumber + 1));
-      }
-    }
-
-    const currentLevel = getLevelByNumber(get().activeLevelId);
-    const savedNetworks = await listSavedNetworksForLevel(session, currentLevel.id);
-
-    set({
-      authSession: session,
-      locale: profile?.locale ?? get().locale,
-      starsByLevel,
-      unlockedUpToLevel: highestUnlocked,
-      savedNetworks,
-    });
   },
   setLastTrainingLoss: (lastTrainingLoss) => set({ lastTrainingLoss }),
   setTopology: (topology) =>
     set((state) => {
+      const level = getLevelByNumber(state.activeLevelId);
       const nextParams = initializeNetworkParameters(topology, state.weightInit, 42);
       for (const [key, val] of Object.entries(state.parameters.linkWeights)) {
         if (key in nextParams.linkWeights) {
@@ -236,32 +148,50 @@ export const useGameStore = create<GameState>((set, get) => ({
           nextParams.biases[key] = val;
         }
       }
-      return { topology, parameters: nextParams };
+      const nextLoss = evaluateDatasetLoss(topology, nextParams, level.dataset, {
+        useBias: state.useBias,
+        outputActivation: state.activation,
+      });
+      return { topology, parameters: nextParams, lastTrainingLoss: nextLoss };
     }),
-  setParameters: (parameters) => set({ parameters }),
+  setParameters: (parameters) =>
+    set((state) => {
+      const level = getLevelByNumber(state.activeLevelId);
+      const nextLoss = evaluateDatasetLoss(state.topology, parameters, level.dataset, {
+        useBias: state.useBias,
+        outputActivation: state.activation,
+      });
+      return { parameters, lastTrainingLoss: nextLoss };
+    }),
   setLearningRate: (learningRate) => set({ learningRate }),
   setEpochs: (epochs) => set({ epochs }),
   setActivation: (activation) =>
-    set((state) => ({
-      activation,
-      topology: {
+    set((state) => {
+      const level = getLevelByNumber(state.activeLevelId);
+      const nextTopology = {
         ...state.topology,
         hidden: state.topology.hidden.map((layer) =>
           layer.map((n) => ({ ...n, activation })),
         ),
-      },
-    })),
+      };
+      const nextLoss = evaluateDatasetLoss(nextTopology, state.parameters, level.dataset, {
+        useBias: state.useBias,
+        outputActivation: activation,
+      });
+      return {
+        activation,
+        topology: nextTopology,
+        lastTrainingLoss: nextLoss,
+      };
+    }),
   setWeightInit: (weightInit) => set({ weightInit }),
-  setUseBias: (useBias) => set({ useBias }),
-  loginAnonymously: async () => {
-    const session = await signInAnonymouslyUser();
-    await get().hydrateFromCloud(session);
-    return session;
-  },
-  linkGoogleAccount: async (profileOverride) => {
-    const current = get().authSession ?? (await signInAnonymouslyUser());
-    const linked = await linkAnonymousWithGoogle(current, profileOverride);
-    await get().hydrateFromCloud(linked);
-    return linked;
-  },
+  setUseBias: (useBias) =>
+    set((state) => {
+      const level = getLevelByNumber(state.activeLevelId);
+      const nextLoss = evaluateDatasetLoss(state.topology, state.parameters, level.dataset, {
+        useBias,
+        outputActivation: state.activation,
+      });
+      return { useBias, lastTrainingLoss: nextLoss };
+    }),
 }));

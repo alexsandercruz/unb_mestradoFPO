@@ -6,8 +6,8 @@
     "en": "4. The XOR"
   },
   "challenge": {
-    "pt-BR": "Porta que abre com exatamente um botão aceso (OU Exclusivo)",
-    "en": "Gate that opens when exactly one button is lit (Exclusive OR)"
+    "pt-BR": "Superar 3 obstáculos e abrir a porta XOR (exatamente 1 sensor ativo)",
+    "en": "Clear 3 obstacles and open the XOR gate (exactly 1 active sensor)"
   },
   "concept": {
     "pt-BR": "Por que um neurônio só não basta; treino por backpropagation",
@@ -48,25 +48,28 @@
     "mode": "xor_gate",
     "width": 600,
     "height": 260,
-    "startX": 50,
+    "startX": 45,
     "startY": 180,
     "startAngleDeg": 0,
-    "targetX": 540,
+    "targetX": 555,
     "targetY": 180,
-    "maxTicks": 110,
-    "obstacles": []
+    "maxTicks": 120,
+    "obstacles": [
+      { "id": "xor-box-1", "x": 165, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
+      { "id": "xor-box-2", "x": 275, "y": 163, "width": 28, "height": 32, "lowObstacle": true },
+      { "id": "xor-box-3", "x": 375, "y": 165, "width": 26, "height": 30, "lowObstacle": true }
+    ]
   },
   "tutorial": {
     "pt-BR": [
       "Passo 1 (Faça primeiro): Monte a rede 2 → 2 → 1 (2 entradas, 2 neurônios ocultos e 1 saída totalmente conectados).",
-      "Passo 2 (Treine por Backpropagation): Use função tanh ou sigmoide e 200+ épocas para ver a curva de loss cair abaixo de 0,05.",
-      "Conceito revelado — Backpropagation e XOR: O problema XOR não é linearmente separável! Um neurônio oculto aprende OR, outro aprende AND, e a saída subtrai um do outro."
+      "Passo 2 (Treine por Backpropagation): Use função tanh ou sigmoide, taxa ~0,35 e 250+ épocas para ver a curva de loss cair abaixo de 0,05.",
+      "Conceito revelado — Backpropagation e XOR: O problema XOR não é linearmente separável! Um neurônio oculto aprende OR, outro aprende AND, e a saída combina ambos."
     ],
     "en": [
       "Step 1 (Do first): Build the 2 → 2 → 1 network (2 inputs, 2 hidden neurons, and 1 output fully connected).",
-      "Step 2 (Train via Backpropagation): Use tanh or sigmoid activation and 200+ epochs to watch the loss curve drop below 0.05.",
+      "Step 2 (Train via Backpropagation): Use tanh or sigmoid activation, learning rate ~0.35 and 250+ epochs to watch the loss curve drop below 0.05.",
       "Concept unlocked — Backpropagation & XOR: XOR is not linearly separable! One hidden neuron learns OR, the other learns AND, and the output combines them."
     ]
   }
 }
-

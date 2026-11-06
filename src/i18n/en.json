@@ -134,7 +134,7 @@
     "locked": "Locked",
     "unlocked": "Unlocked",
     "totalStars": "Total Stars: {stars} / 15",
-    "loadIdealBtn": "Build Level Ideal Network",
+    "loadIdealBtn": "Build Base Topology (Untuned Weights)",
     "tutorialHeading": "Guided Tutorial (Learn by Doing, Name it Later)",
     "datasetHeading": "Supervised Examples Table (Situation → Correct Action)",
     "rewardHeading": "Reward Rules (Reinforcement Learning — Level 5)",

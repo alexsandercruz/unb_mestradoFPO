@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { getDictionary, Locale } from '../../i18n';
-import { SavedNetworkDoc, MAX_SAVED_NETWORKS_PER_LEVEL } from '../../services/firebase';
 import { LEVELS, LevelDefinition } from './index';
 
 export interface LevelsPanelProps {
@@ -8,11 +7,8 @@ export interface LevelsPanelProps {
   activeLevelNumber: number;
   unlockedUpTo: number;
   starsByLevel: Record<string, 0 | 1 | 2 | 3>;
-  savedNetworks?: SavedNetworkDoc[];
   onSelectLevel: (levelNumber: number) => void;
   onLoadIdealNetwork: (level: LevelDefinition) => void;
-  onSaveCurrentNetwork?: (name: string) => Promise<unknown>;
-  onLoadSavedNetwork?: (doc: SavedNetworkDoc) => void;
 }
 
 export function LevelsPanel({
@@ -20,17 +16,13 @@ export function LevelsPanel({
   activeLevelNumber,
   unlockedUpTo,
   starsByLevel,
-  savedNetworks = [],
   onSelectLevel,
   onLoadIdealNetwork,
-  onSaveCurrentNetwork,
-  onLoadSavedNetwork,
 }: LevelsPanelProps): React.JSX.Element {
   const t = getDictionary(locale);
   const [showGlossary, setShowGlossary] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
-  const [networkName, setNetworkName] = useState('');
 
   const activeLevel = LEVELS.find((l) => l.levelNumber === activeLevelNumber) ?? LEVELS[0];
   const totalStars = Object.values(starsByLevel).reduce<number>((acc, s) => acc + s, 0);
@@ -42,12 +34,6 @@ export function LevelsPanel({
   const quizScore = t.levels.quizQuestions.reduce((acc, q, idx) => {
     return acc + (quizAnswers[idx] === q.correct ? 1 : 0);
   }, 0);
-
-  const handleSaveNetwork = async () => {
-    if (!onSaveCurrentNetwork) return;
-    await onSaveCurrentNetwork(networkName || `Rede ${activeLevel.id}`);
-    setNetworkName('');
-  };
 
   return (
     <section className="levels-card" aria-labelledby="levels-heading">
@@ -182,58 +168,6 @@ export function LevelsPanel({
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Persistência de Redes Salvas por Fase (Até 10 redes — RF-09) */}
-      <div className="inspector-box" data-testid="saved-networks-box">
-        <h3>
-          {t.persistence.savedNetworksTitle.replace('{count}', String(savedNetworks.length))}
-        </h3>
-        <div className="toolbar-actions" style={{ flexWrap: 'wrap' }}>
-          <input
-            type="text"
-            className="locale-select"
-            placeholder={t.persistence.networkNamePlaceholder}
-            value={networkName}
-            data-testid="save-network-name-input"
-            onChange={(e) => setNetworkName(e.target.value)}
-          />
-          <button
-            type="button"
-            className="secondary-btn"
-            disabled={savedNetworks.length >= MAX_SAVED_NETWORKS_PER_LEVEL}
-            data-testid="save-network-btn"
-            onClick={() => void handleSaveNetwork()}
-          >
-            💾 {t.persistence.saveNetworkBtn}
-          </button>
-        </div>
-
-        {savedNetworks.length === 0 ? (
-          <p className="inspector-empty">{t.persistence.emptyNetworks}</p>
-        ) : (
-          <ul className="levels-list">
-            {savedNetworks.map((net) => (
-              <li
-                key={net.id}
-                className="level-item"
-                data-testid={`saved-network-item-${net.name}`}
-              >
-                <span>
-                  <strong>{net.name}</strong> ({net.topology.links.length} cabos)
-                </span>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  data-testid={`load-saved-network-${net.name}`}
-                  onClick={() => onLoadSavedNetwork?.(net)}
-                >
-                  {t.persistence.loadNetworkBtn}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       {/* Glossário de ML acessível a qualquer momento (RF-10) */}

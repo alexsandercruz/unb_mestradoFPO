@@ -302,3 +302,44 @@ export function forwardPass(
 
   return { outputs, neurons };
 }
+
+/**
+ * Calcula a perda média quadrática (MSE) dos parâmetros atuais da rede sobre o dataset da fase.
+ * Permite avaliar em tempo real tanto o ajuste manual de pesos quanto o treino via TensorFlow.js.
+ */
+export function evaluateDatasetLoss(
+  topology: NetworkTopology,
+  params: NetworkParameters,
+  dataset: DatasetSample[],
+  options: ForwardPassOptions = {},
+): number {
+  if (dataset.length === 0 || topology.outputs.length === 0) {
+    return 1.0;
+  }
+
+  let totalSquaredError = 0;
+  let count = 0;
+
+  for (const sample of dataset) {
+    const inputMap: Record<string, number> = {};
+    topology.inputs.forEach((inpId, idx) => {
+      inputMap[inpId] = sample.inputs[idx] ?? 0;
+    });
+
+    const res = forwardPass(topology, params, inputMap, options);
+    topology.outputs.forEach((outId, idx) => {
+      const target = sample.targets[idx] ?? 0;
+      const neuronState = res.neurons[outId];
+      // Para 'step', combina saída discreta com margem sigmoide contínua para exigir margem segura nos pesos
+      const pred =
+        options.outputActivation === 'step' && neuronState
+          ? 0.5 * neuronState.output + 0.5 * (1 / (1 + Math.exp(-neuronState.weightedSum * 3.5)))
+          : (res.outputs[outId] ?? 0);
+      const diff = pred - target;
+      totalSquaredError += diff * diff;
+      count += 1;
+    });
+  }
+
+  return count > 0 ? Number((totalSquaredError / count).toFixed(4)) : 1.0;
+}

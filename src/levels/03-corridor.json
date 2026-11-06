@@ -6,8 +6,8 @@
     "en": "3. Corridor"
   },
   "challenge": {
-    "pt-BR": "Seguir um corredor sinuoso sem bater nas paredes",
-    "en": "Follow a winding corridor without hitting the walls"
+    "pt-BR": "Seguir corredor sinuoso desviando de 4 pilares e das paredes",
+    "en": "Follow a winding corridor while avoiding 4 pillars and the walls"
   },
   "concept": {
     "pt-BR": "Camada oculta e ativação não linear",
@@ -56,31 +56,36 @@
     { "inputs": [0.0, 0.5, 0.5], "targets": [1, 0, 0] },
     { "inputs": [0.2, 0.85, 0.15], "targets": [1, 0, 1] },
     { "inputs": [0.2, 0.15, 0.85], "targets": [1, 1, 0] },
-    { "inputs": [0.6, 0.75, 0.25], "targets": [1, 0, 1] }
+    { "inputs": [0.6, 0.78, 0.22], "targets": [1, 0, 1] },
+    { "inputs": [0.6, 0.22, 0.78], "targets": [1, 1, 0] }
   ],
   "arena": {
     "mode": "corridor",
     "width": 600,
     "height": 260,
-    "startX": 50,
+    "startX": 45,
     "startY": 130,
     "startAngleDeg": 0,
-    "targetX": 540,
+    "targetX": 555,
     "targetY": 130,
-    "maxTicks": 120,
-    "obstacles": []
+    "maxTicks": 125,
+    "obstacles": [
+      { "id": "pillar-1", "x": 175, "y": 82, "width": 20, "height": 24 },
+      { "id": "pillar-2", "x": 280, "y": 182, "width": 20, "height": 24 },
+      { "id": "pillar-3", "x": 385, "y": 78, "width": 20, "height": 24 },
+      { "id": "pillar-4", "x": 475, "y": 178, "width": 20, "height": 24 }
+    ]
   },
   "tutorial": {
     "pt-BR": [
-      "Passo 1 (Faça primeiro): Monte 3 sensores (frente, esquerda, direita), até 4 neurônios na camada oculta e 3 ações (andar, virar esquerda, virar direita).",
-      "Passo 2 (Treine com ativação não linear): Use sigmoide ou ReLU e treine para que o robô corrija sua direção quando se aproximar de uma parede.",
-      "Conceito revelado — Camada Oculta: Os neurônios intermediários combinam múltiplos sensores para tomar decisões coordenadas."
+      "Passo 1 (Faça primeiro): Monte a rede 3 → 4 → 3 conectando os sensores laterais e frontal aos 4 neurônios ocultos e às 3 ações.",
+      "Passo 2 (Treine a Rede): Aumente as épocas (200+) e a taxa de aprendizado (~0,35) e clique em 'Treinar Rede' até a loss cair abaixo de 0,06.",
+      "Conceito revelado — Camada Oculta: Sem treinar os neurônios ocultos, o robô bate nos pilares ou nas paredes do corredor sinuoso!"
     ],
     "en": [
-      "Step 1 (Do first): Set up 3 sensors (front, left, right), up to 4 hidden neurons, and 3 actions (walk, turn left, turn right).",
-      "Step 2 (Train with non-linear activation): Use sigmoid or ReLU and train so the robot steers away when approaching a wall.",
-      "Concept unlocked — Hidden Layer: Intermediate neurons combine multiple sensor readings to make coordinated decisions."
+      "Step 1 (Do first): Build the 3 → 4 → 3 network connecting lateral and front sensors to 4 hidden neurons and 3 actions.",
+      "Step 2 (Train the Network): Increase epochs (200+) and learning rate (~0.35) and click 'Train Network' until loss drops below 0.06.",
+      "Concept unlocked — Hidden Layer: Without training the hidden neurons, the robot crashes into the pillars or corridor walls!"
     ]
   }
 }
-

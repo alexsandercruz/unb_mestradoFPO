@@ -7,8 +7,35 @@ export { LEVELS, getLevelById, getLevelByNumber };
 export type { LevelDefinition };
 
 /**
+ * Retorna pesos iniciais não calibrados (pré-treino) para obrigar o jogador
+ * a ajustar os pesos manualmente ou treinar a rede neural para superar os obstáculos.
+ */
+export function getUntunedParametersForLevel(levelNumber: number): NetworkParameters {
+  const level = getLevelByNumber(levelNumber);
+  const linkWeights: Record<string, number> = {};
+  const biases: Record<string, number> = {};
+
+  level.idealTopology.links.forEach(([from, to], idx) => {
+    // Pesos iniciais fracos (0.15 a 0.30) insuficientes para superar os obstáculos sem ajuste/treino
+    linkWeights[`${from}->${to}`] = Number((0.18 + (idx % 3) * 0.04).toFixed(2));
+  });
+
+  for (const layer of level.idealTopology.hidden) {
+    layer.forEach((neuron, idx) => {
+      biases[neuron.id] = Number((-0.25 - idx * 0.35).toFixed(2));
+    });
+  }
+
+  for (const outId of level.idealTopology.outputs) {
+    biases[outId] = 0.15;
+  }
+
+  return { linkWeights, biases };
+}
+
+/**
  * Retorna pesos convergidos de referência para a rede ideal de cada fase,
- * garantindo que tanto o treino via TF.js quanto o carregamento da rede ideal superem o desafio com 3 estrelas.
+ * garantindo que tanto o treino via TF.js quanto os testes automatizados superem o desafio com 3 estrelas.
  */
 export function getIdealParametersForLevel(levelNumber: number): NetworkParameters {
   switch (levelNumber) {

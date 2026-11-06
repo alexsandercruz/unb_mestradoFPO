@@ -32,8 +32,6 @@ describe('T9 Polish — i18n Parity, Analytics Events, LGPD Notice, WCAG 2.1 AA 
       activeLevelId: 1,
       unlockedUpToLevel: 1,
       starsByLevel: {},
-      savedNetworks: [],
-      authSession: null,
     });
   });
 
@@ -83,18 +81,14 @@ describe('T9 Polish — i18n Parity, Analytics Events, LGPD Notice, WCAG 2.1 AA 
   it('records all 4 Firebase Analytics events (level_start, train_run, level_complete, hint_open)', async () => {
     render(<App />);
 
-    // 1. level_start registrado na inicialização e troca de fase
     await act(async () => {
       await useGameStore.getState().setActiveLevelId(1);
     });
 
-    // 2. hint_open registrado ao abrir dica "O que isso faz?"
     fireEvent.click(screen.getByTestId('hint-btn-lr'));
 
-    // 3. train_run registrado com épocas e loss final
     trackAnalyticsEvent('train_run', { epochs: 50, finalLoss: 0.012 });
 
-    // 4. level_complete registrado ao concluir a fase com estrelas
     await act(async () => {
       await useGameStore.getState().recordLevelCompletion(true, 0.01);
     });
@@ -109,17 +103,14 @@ describe('T9 Polish — i18n Parity, Analytics Events, LGPD Notice, WCAG 2.1 AA 
   it('displays LGPD & minors notice, WCAG 2.1 AA skip link, and reacts to offline/online PWA events (RNF-04, RNF-05, RNF-06)', async () => {
     render(<App />);
 
-    // Skip to content link (WCAG 2.1 AA)
     expect(screen.getByTestId('skip-link')).toHaveAttribute('href', '#main-content');
     expect(screen.getByTestId('wcag-badge')).toBeInTheDocument();
 
-    // LGPD Banner e botão de aceite
     expect(screen.getByTestId('lgpd-banner')).toBeInTheDocument();
     const acceptBtn = screen.getByTestId('lgpd-accept-btn');
     fireEvent.click(acceptBtn);
     expect(screen.queryByTestId('lgpd-accept-btn')).not.toBeInTheDocument();
 
-    // Simula desconexão e reconexão PWA offline (RNF-06)
     await act(async () => {
       window.dispatchEvent(new Event('offline'));
     });
@@ -131,4 +122,3 @@ describe('T9 Polish — i18n Parity, Analytics Events, LGPD Notice, WCAG 2.1 AA 
     expect(screen.getByTestId('pwa-status-badge')).toHaveTextContent(/PWA Offline Pronto/i);
   });
 });
-

@@ -6,8 +6,8 @@
     "en": "1. First Step"
   },
   "challenge": {
-    "pt-BR": "Pular caixas quando estiverem perto",
-    "en": "Jump over boxes when they are close"
+    "pt-BR": "Saltar sequência de 4 caixas ajustando o peso e o limiar (bias)",
+    "en": "Jump over a sequence of 4 boxes by tuning weight and threshold (bias)"
   },
   "concept": {
     "pt-BR": "Neurônio único, peso e limiar (Perceptron)",
@@ -29,35 +29,38 @@
   "dataset": [
     { "inputs": [0.0], "targets": [0] },
     { "inputs": [0.15], "targets": [0] },
-    { "inputs": [0.75], "targets": [1] },
+    { "inputs": [0.28], "targets": [0] },
+    { "inputs": [0.68], "targets": [1] },
+    { "inputs": [0.85], "targets": [1] },
     { "inputs": [1.0], "targets": [1] }
   ],
   "arena": {
     "mode": "box_jump",
     "width": 600,
     "height": 260,
-    "startX": 50,
+    "startX": 45,
     "startY": 180,
     "startAngleDeg": 0,
-    "targetX": 540,
+    "targetX": 555,
     "targetY": 180,
-    "maxTicks": 115,
+    "maxTicks": 120,
     "obstacles": [
-      { "id": "box-1", "x": 210, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
-      { "id": "box-2", "x": 380, "y": 165, "width": 26, "height": 30, "lowObstacle": true }
+      { "id": "box-1", "x": 150, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
+      { "id": "box-2", "x": 260, "y": 161, "width": 28, "height": 34, "lowObstacle": true },
+      { "id": "box-3", "x": 370, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
+      { "id": "box-4", "x": 475, "y": 161, "width": 30, "height": 34, "lowObstacle": true }
     ]
   },
   "tutorial": {
     "pt-BR": [
-      "Passo 1 (Faça primeiro): Conecte o sensor 'Distância à frente' à ação 'Pular' com um cabo positivo.",
-      "Passo 2 (Ajuste e treine): Clique em 'Treinar Rede' ou ajuste o peso positivo e um bias negativo para que o robô só pule quando a caixa estiver perto.",
-      "Conceito revelado — Perceptron: Você acabou de construir um neurônio artificial! Ele multiplica a entrada pelo peso (w), soma o limiar (bias b) e ativa a saída."
+      "Passo 1 (Faça primeiro): Conecte o sensor 'Distância à frente' à ação 'Pular'. Os pesos iniciais começam descalibrados!",
+      "Passo 2 (Ajuste Pesos ou Treine): Ajuste manualmente w(dist_front→jump) acima de +2,0 e bias(jump) próximo de −1,0 (ou clique em 'Treinar Rede') para vencer as 4 caixas.",
+      "Conceito revelado — Perceptron: Um neurônio multiplica a entrada pelo peso (w), soma o limiar (bias b) e só dispara quando a soma ultrapassa zero!"
     ],
     "en": [
-      "Step 1 (Do first): Connect the 'Distance front' sensor to the 'Jump' action with a positive cable.",
-      "Step 2 (Tune & train): Click 'Train Network' or tune a positive weight and negative bias so the robot only jumps when a box is near.",
-      "Concept unlocked — Perceptron: You just built an artificial neuron! It multiplies input by weight (w), adds bias (b), and triggers the activation."
+      "Step 1 (Do first): Connect the 'Distance front' sensor to the 'Jump' action. Initial weights start untuned!",
+      "Step 2 (Tune Weights or Train): Manually tune w(dist_front→jump) above +2.0 and bias(jump) near −1.0 (or click 'Train Network') to clear all 4 boxes.",
+      "Concept unlocked — Perceptron: A neuron multiplies input by weight (w), adds bias (b), and only fires when the sum crosses zero!"
     ]
   }
 }
-

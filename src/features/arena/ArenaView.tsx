@@ -275,6 +275,34 @@ export function ArenaView({
             />
           ))}
 
+          {/* Paredes do corredor sinuoso na Fase 3 */}
+          {arenaMap.mode === 'corridor' && (
+            <g opacity={0.85}>
+              <polyline
+                fill="none"
+                stroke="#f97316"
+                strokeWidth={3}
+                strokeDasharray="6 4"
+                points={Array.from({ length: 31 }, (_, i) => {
+                  const px = i * 20;
+                  const py = 130 + Math.sin(px / 85) * 24 - 46;
+                  return `${px},${py.toFixed(1)}`;
+                }).join(' ')}
+              />
+              <polyline
+                fill="none"
+                stroke="#f97316"
+                strokeWidth={3}
+                strokeDasharray="6 4"
+                points={Array.from({ length: 31 }, (_, i) => {
+                  const px = i * 20;
+                  const py = 130 + Math.sin(px / 85) * 24 + 46;
+                  return `${px},${py.toFixed(1)}`;
+                }).join(' ')}
+              />
+            </g>
+          )}
+
           {/* Porta lógica nas fases 2 e 4 */}
           {(arenaMap.mode === 'logic_gate_and_or' || arenaMap.mode === 'xor_gate') && (
             <g transform="translate(440, 120)">

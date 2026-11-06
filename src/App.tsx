@@ -15,8 +15,6 @@ export function App(): React.JSX.Element {
     activeLevelId,
     unlockedUpToLevel,
     starsByLevel,
-    savedNetworks,
-    authSession,
     topology,
     parameters,
     learningRate,
@@ -28,9 +26,6 @@ export function App(): React.JSX.Element {
     setActiveLevelId,
     loadIdealNetworkForLevel,
     recordLevelCompletion,
-    saveCurrentNetwork,
-    loadSavedNetwork,
-    hydrateFromCloud,
     setLastTrainingLoss,
     setTopology,
     setParameters,
@@ -39,8 +34,6 @@ export function App(): React.JSX.Element {
     setActivation,
     setWeightInit,
     setUseBias,
-    loginAnonymously,
-    linkGoogleAccount,
   } = useGameStore();
   const t = getDictionary(locale);
 
@@ -57,19 +50,15 @@ export function App(): React.JSX.Element {
   const [analyticsCount, setAnalyticsCount] = useState<number>(() => getAnalyticsEvents().length);
 
   useEffect(() => {
-    if (!authSession) {
-      void loginAnonymously();
-    }
     if (getAnalyticsEvents().length === 0) {
       trackAnalyticsEvent('level_start', { levelId: '01-first-step', levelNumber: 1 });
       setAnalyticsCount(getAnalyticsEvents().length);
     }
-  }, [authSession, loginAnonymously]);
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      void hydrateFromCloud();
     };
     const handleOffline = () => {
       setIsOnline(false);
@@ -80,7 +69,7 @@ export function App(): React.JSX.Element {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [hydrateFromCloud]);
+  }, []);
 
   const handleAcceptLgpd = () => {
     setLgpdAccepted(true);
@@ -111,40 +100,9 @@ export function App(): React.JSX.Element {
         </div>
 
         <div className="header-controls">
-          <div className="auth-bar" data-testid="auth-bar">
-            <span className="emulator-badge" data-testid="pwa-status-badge">
-              {isOnline ? t.polish.pwaReady : t.polish.pwaOfflineMode}
-            </span>
-            <span className="emulator-badge">{t.auth.emulatorActive}</span>
-            {authSession ? (
-              <>
-                <span className="auth-status-badge" data-testid="auth-status-badge">
-                  {authSession.isAnonymous ? t.auth.anonymousBadge : t.auth.googleBadge}
-                </span>
-                <code className="uid-pill" data-testid="auth-uid">
-                  {t.auth.uidLabel}: {authSession.uid}
-                </code>
-                {authSession.isAnonymous && (
-                  <button
-                    type="button"
-                    className="secondary-btn"
-                    data-testid="link-google-btn"
-                    onClick={() => void linkGoogleAccount()}
-                  >
-                    {t.auth.linkGoogle}
-                  </button>
-                )}
-              </>
-            ) : (
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={() => void loginAnonymously()}
-              >
-                {t.auth.signInAnonymous}
-              </button>
-            )}
-          </div>
+          <span className="emulator-badge" data-testid="pwa-status-badge">
+            {isOnline ? t.polish.pwaReady : t.polish.pwaOfflineMode}
+          </span>
 
           <div className="locale-switcher">
             <label htmlFor="locale-select">{t.app.languageLabel}:</label>
@@ -186,13 +144,10 @@ export function App(): React.JSX.Element {
           activeLevelNumber={activeLevelId}
           unlockedUpTo={unlockedUpToLevel}
           starsByLevel={starsByLevel}
-          savedNetworks={savedNetworks}
           onSelectLevel={(id) => {
             void setActiveLevelId(id).then(() => setAnalyticsCount(getAnalyticsEvents().length));
           }}
           onLoadIdealNetwork={loadIdealNetworkForLevel}
-          onSaveCurrentNetwork={saveCurrentNetwork}
-          onLoadSavedNetwork={loadSavedNetwork}
         />
 
         <NeuronEditor

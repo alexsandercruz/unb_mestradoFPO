@@ -10,12 +10,6 @@ describe('T1 Scaffold — NeuroBot Initial Screen & Core Stubs', () => {
     useGameStore.setState({
       locale: 'pt-BR',
       activeLevelId: 1,
-      authSession: {
-        uid: 'anon_test_user',
-        isAnonymous: true,
-        displayName: 'Cientista Anônimo',
-        email: null,
-      },
     });
   });
 

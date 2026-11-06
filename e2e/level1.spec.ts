@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('NeuroBot E2E — Fase 1 (Primeiro passo)', () => {
-  test('completa a Fase 1 do início ao fim, ganha 3 estrelas e libera a Fase 2', async ({
+test.describe('NeuroBot E2E — Fase 1 (Primeiro passo com 4 obstáculos)', () => {
+  test('falha sem calibrar pesos, treina a rede no Web Worker, supera as 4 caixas e ganha 3 estrelas', async ({
     page,
   }) => {
     await page.goto('/');
@@ -11,16 +11,17 @@ test.describe('NeuroBot E2E — Fase 1 (Primeiro passo)', () => {
     await expect(page.getByTestId('level-item-1')).toBeVisible();
     await expect(page.getByTestId('level-item-2')).toContainText('Bloqueada');
 
-    // Carrega a rede ideal da Fase 1 (1 entrada dist_front -> 1 saída jump)
-    await page.getByTestId('load-ideal-network-btn').click();
-    await expect(page.getByTestId('exported-topology-json')).toContainText('"dist_front"');
-    await expect(page.getByTestId('exported-topology-json')).toContainText('"jump"');
+    // Treina a rede neural no Web Worker (TensorFlow.js) para calibrar peso e bias
+    await page.getByTestId('train-start-btn').click();
+    await expect(page.getByTestId('training-status-pill')).toContainText('Treino concluído', {
+      timeout: 15000,
+    });
 
-    // Seleciona velocidade 4x na Arena 2D e executa o robô
+    // Seleciona velocidade 4x na Arena 2D e executa o robô contra as 4 caixas
     await page.getByTestId('speed-btn-4x').click();
     await page.getByTestId('run-arena-btn').click();
 
-    // Aguarda o robô superar o desafio na Arena 2D
+    // Aguarda o robô superar as 4 caixas e alcançar o alvo
     await expect(page.getByTestId('arena-outcome-banner')).toContainText('Desafio Superado', {
       timeout: 15000,
     });

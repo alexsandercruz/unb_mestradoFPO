@@ -6,8 +6,8 @@
     "en": "2. Logic Gate"
   },
   "challenge": {
-    "pt-BR": "Abrir a porta com botões de luz no chão (AND / OR)",
-    "en": "Open the gate using floor light buttons (AND / OR)"
+    "pt-BR": "Superar 3 barreiras de sensores e abrir a porta lógica (AND / OR)",
+    "en": "Clear 3 sensor barriers and open the logic gate (AND / OR)"
   },
   "concept": {
     "pt-BR": "Bias e separação linear",
@@ -39,25 +39,28 @@
     "mode": "logic_gate_and_or",
     "width": 600,
     "height": 260,
-    "startX": 50,
+    "startX": 45,
     "startY": 180,
     "startAngleDeg": 0,
-    "targetX": 540,
+    "targetX": 555,
     "targetY": 180,
-    "maxTicks": 110,
-    "obstacles": []
+    "maxTicks": 120,
+    "obstacles": [
+      { "id": "lg-box-1", "x": 165, "y": 165, "width": 26, "height": 30, "lowObstacle": true },
+      { "id": "lg-box-2", "x": 275, "y": 163, "width": 28, "height": 32, "lowObstacle": true },
+      { "id": "lg-box-3", "x": 375, "y": 165, "width": 26, "height": 30, "lowObstacle": true }
+    ]
   },
   "tutorial": {
     "pt-BR": [
-      "Passo 1 (Faça primeiro): Ligue os 2 sensores à saída sem usar camada oculta (rede 2 → 1).",
-      "Passo 2 (Experimente o Bias): Veja como mudar o bias altera se a porta abre com 1 botão aceso (OR) ou só com os 2 botões acesos (AND).",
-      "Conceito revelado — Separação Linear: Uma linha reta consegue separar os exemplos verdadeiros dos falsos nas portas AND e OR!"
+      "Passo 1 (Faça primeiro): Ligue os 2 sensores ('Distância à frente' e 'Cor do chão') à saída 'Pular' (rede 2 → 1).",
+      "Passo 2 (Calibre os Pesos e o Bias): Ajuste pesos positivos fortes (+3,0) e um bias negativo (−1,8 a −2,5) ou treine a rede por 150+ épocas para saltar as 3 barreiras e destravar a porta.",
+      "Conceito revelado — Separação Linear: Uma única reta (definida pelos 2 pesos e pelo bias) separa perfeitamente os estados das portas AND e OR!"
     ],
     "en": [
-      "Step 1 (Do first): Connect both sensors directly to the output without a hidden layer (2 → 1 network).",
-      "Step 2 (Explore Bias): Observe how shifting the bias changes whether the gate opens with 1 button (OR) or requires both buttons (AND).",
-      "Concept unlocked — Linear Separation: A single straight line can separate true and false cases in AND and OR gates!"
+      "Step 1 (Do first): Connect both sensors ('Distance front' and 'Floor light') to 'Jump' (2 → 1 network).",
+      "Step 2 (Calibrate Weights & Bias): Set strong positive weights (+3.0) and a negative bias (−1.8 to −2.5) or train for 150+ epochs to clear the 3 barriers and unlock the gate.",
+      "Concept unlocked — Linear Separation: A single line (defined by the 2 weights and bias) cleanly separates AND and OR gate states!"
     ]
   }
 }
-

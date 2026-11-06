@@ -10,7 +10,7 @@
 
 **NeuroBot** é um jogo web interativo em que estudantes do ensino médio e graduação (14+ anos) e iniciantes em Aprendizado de Máquina (*Machine Learning*) montam pequenas redes neurais artificiais, ajustam seus hiperparâmetros, treinam-nas em tempo real diretamente no navegador com **TensorFlow.js** (executando em *Web Worker*) e testam um robô autônomo em uma **Arena 2D determinística (Pixi.js)**.
 
-Toda a aplicação segue rigorosamente a especificação definida no [**Software Design Document (`docs/SDD.md`)**](./docs/SDD.md) e adota o princípio pedagógico **"aprenda fazendo, nomeie depois"**: cada conceito aparece primeiro como mecânica prática de jogo e só depois recebe a nomenclatura formal.
+Toda a aplicação adota o princípio pedagógico **"aprenda fazendo, nomeie depois"**: cada conceito aparece primeiro como mecânica prática de jogo e só depois recebe a nomenclatura formal.
 
 ---
 

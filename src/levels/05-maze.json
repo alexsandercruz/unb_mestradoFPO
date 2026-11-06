@@ -6,8 +6,8 @@
     "en": "5. Maze"
   },
   "challenge": {
-    "pt-BR": "Chegar ao alvo num labirinto curto desviando de blocos",
-    "en": "Reach the target in a short maze while avoiding blocks"
+    "pt-BR": "Atravessar labirinto em slalom com 5 barreiras até a bandeira",
+    "en": "Navigate a slalom maze with 5 barriers to reach the flag"
   },
   "concept": {
     "pt-BR": "Aprendizado por reforço simples (recompensa por chegar, penalidade por bater)",
@@ -57,34 +57,37 @@
     { "inputs": [0.0, 0.5, 0.5, 0.0], "targets": [1, 0, 0] },
     { "inputs": [0.4, 0.85, 0.2, 0.35], "targets": [1, 0, 1] },
     { "inputs": [0.4, 0.2, 0.85, -0.35], "targets": [1, 1, 0] },
-    { "inputs": [0.0, 0.4, 0.6, -0.25], "targets": [1, 1, 0] }
+    { "inputs": [0.0, 0.35, 0.65, -0.25], "targets": [1, 1, 0] },
+    { "inputs": [0.0, 0.65, 0.35, 0.25], "targets": [1, 0, 1] }
   ],
   "arena": {
     "mode": "maze_rl",
     "width": 600,
     "height": 260,
-    "startX": 50,
+    "startX": 45,
     "startY": 130,
     "startAngleDeg": 0,
-    "targetX": 540,
+    "targetX": 555,
     "targetY": 130,
-    "maxTicks": 125,
+    "maxTicks": 135,
     "obstacles": [
-      { "id": "maze-wall-1", "x": 220, "y": 55, "width": 24, "height": 45 },
-      { "id": "maze-wall-2", "x": 370, "y": 205, "width": 24, "height": 45 }
+      { "id": "maze-wall-1", "x": 155, "y": 52, "width": 24, "height": 54 },
+      { "id": "maze-wall-2", "x": 245, "y": 195, "width": 24, "height": 54 },
+      { "id": "maze-wall-3", "x": 335, "y": 54, "width": 24, "height": 54 },
+      { "id": "maze-wall-4", "x": 420, "y": 192, "width": 24, "height": 54 },
+      { "id": "maze-wall-5", "x": 490, "y": 56, "width": 22, "height": 50 }
     ]
   },
   "tutorial": {
     "pt-BR": [
       "Passo 1 (Faça primeiro): Use os 4 sensores (incluindo Ângulo até o alvo), até 6 neurônios ocultos e as 3 ações de navegação (rede 4 → 6 → 3).",
-      "Passo 2 (Otimize a Recompensa): No treino por reforço, o robô ganha +100 ao atingir a bandeira, +1 por passo seguro e perde −15 se bater.",
-      "Conceito revelado — Aprendizado por Reforço: Em vez de decorar exemplos prontos, o agente descobre quais ações maximizam a recompensa total no ambiente!"
+      "Passo 2 (Treine para Maximizar a Recompensa): Clique em 'Treinar Rede' para otimizar os pesos e desviar das 5 barreiras do labirinto (+100 na bandeira, −15 se bater).",
+      "Conceito revelado — Aprendizado por Reforço: O agente ajusta sua política de navegação para maximizar a recompensa acumulada sem colidir!"
     ],
     "en": [
       "Step 1 (Do first): Use all 4 sensors (including Target angle), up to 6 hidden neurons, and the 3 navigation actions (4 → 6 → 3 network).",
-      "Step 2 (Maximize Reward): In reinforcement training, the robot earns +100 for reaching the flag, +1 per safe step, and −15 on collision.",
-      "Concept unlocked — Reinforcement Learning: Instead of memorizing labeled examples, the agent discovers actions that maximize cumulative reward!"
+      "Step 2 (Train to Maximize Reward): Click 'Train Network' to optimize weights and weave past all 5 maze barriers (+100 at flag, −15 on collision).",
+      "Concept unlocked — Reinforcement Learning: The agent tunes its navigation policy to maximize cumulative reward without colliding!"
     ]
   }
 }
-
