@@ -59,6 +59,46 @@
       "turn_right": "Virar direita"
     }
   },
+  "params": {
+    "title": "2. Painel de Parâmetros e 3. Treino (Web Worker)",
+    "whatDoesItDo": "O que isso faz?",
+    "learningRateLabel": "Taxa de Aprendizado (0,001 – 1,0)",
+    "learningRateHint": "Controla o tamanho do passo ao ajustar os pesos. Muito baixa aprende devagar; muito alta pode oscilar e não convergir.",
+    "epochsLabel": "Épocas de Treino (1 – 500)",
+    "epochsHint": "Quantas vezes a rede estuda todo o conjunto de exemplos. Mais épocas reduzem o erro, mas cuidado com o overfitting!",
+    "activationLabel": "Função de Ativação",
+    "activationHint": "Define como o neurônio transforma a soma ponderada em saída. Funções não lineares (ReLU, sigmoide, tanh) permitem resolver problemas complexos como o XOR.",
+    "weightInitLabel": "Inicialização de Pesos",
+    "weightInitHint": "Como os pesos começam antes do treino. Quebrar a simetria inicial ajuda os neurônios ocultos a aprenderem papéis diferentes.",
+    "biasLabel": "Usar Bias (Limiar b)",
+    "biasHint": "Desloca a função de ativação para a esquerda ou direita, permitindo ativar o neurônio mesmo quando as entradas são zero.",
+    "manualWeightsTitle": "Ajuste Manual de Pesos e Bias (Fases 1 e 2)",
+    "activations": {
+      "step": "Degrau (Perceptron)",
+      "sigmoid": "Sigmoide (0 a 1)",
+      "relu": "ReLU (Linear Retificada)",
+      "tanh": "Tangente Hiperbólica (−1 a 1)"
+    },
+    "weightInits": {
+      "deterministic": "Padrão Equilibrado (Seed Fixa)",
+      "xavier": "Xavier / Glorot",
+      "random": "Aleatório com Seed",
+      "zeros": "Zeros"
+    },
+    "trainBtn": "Treinar Rede",
+    "pauseBtn": "Pausar",
+    "resumeBtn": "Retomar",
+    "resetBtn": "Reiniciar Pesos",
+    "statusIdle": "Pronto para treinar",
+    "statusRunning": "Treinando no Web Worker (60 fps UI)...",
+    "statusPaused": "Treino pausado (pesos preservados)",
+    "statusCompleted": "Treino concluído!",
+    "epochCounter": "Época: {current} / {total}",
+    "currentLoss": "Loss atual: {loss}",
+    "targetLoss": "Meta da fase: ≤ {target}",
+    "chartTitle": "Curva de Aprendizado (Loss por Época)",
+    "chartRewardTitle": "Recompensa por Episódio (Reforço)"
+  },
   "steps": {
     "build": "1. Montar (Editor de Neurônios)",
     "tune": "2. Ajustar (Painel de Parâmetros)",

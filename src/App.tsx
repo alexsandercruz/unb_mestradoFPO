@@ -2,6 +2,15 @@ import React, { useEffect } from 'react';
 import { getDictionary, Locale } from './i18n';
 import { useGameStore } from './store/useGameStore';
 import { NeuronEditor } from './features/editor/NeuronEditor';
+import { ParamsPanel } from './features/params/ParamsPanel';
+import { DatasetSample } from './core/nn-core';
+
+const DEFAULT_XOR_DATASET: DatasetSample[] = [
+  { inputs: [0, 0], targets: [0] },
+  { inputs: [0, 1], targets: [1] },
+  { inputs: [1, 0], targets: [1] },
+  { inputs: [1, 1], targets: [0] },
+];
 
 export function App(): React.JSX.Element {
   const {
@@ -10,11 +19,20 @@ export function App(): React.JSX.Element {
     authSession,
     topology,
     parameters,
+    learningRate,
+    epochs,
     activation,
+    weightInit,
     useBias,
     setLocale,
     setActiveLevelId,
     setTopology,
+    setParameters,
+    setLearningRate,
+    setEpochs,
+    setActivation,
+    setWeightInit,
+    setUseBias,
     loginAnonymously,
     linkGoogleAccount,
   } = useGameStore();
@@ -119,6 +137,27 @@ export function App(): React.JSX.Element {
             maxHiddenNeurons: 6,
           }}
           onChangeTopology={setTopology}
+        />
+
+        <ParamsPanel
+          locale={locale}
+          topology={topology}
+          parameters={parameters}
+          learningRate={learningRate}
+          epochs={epochs}
+          activation={activation}
+          weightInit={weightInit}
+          useBias={useBias}
+          dataset={DEFAULT_XOR_DATASET}
+          targetLoss={0.05}
+          allowManualWeights={activeLevelId <= 2}
+          isReinforcementLevel={activeLevelId === 5}
+          onChangeLearningRate={setLearningRate}
+          onChangeEpochs={setEpochs}
+          onChangeActivation={setActivation}
+          onChangeWeightInit={setWeightInit}
+          onChangeUseBias={setUseBias}
+          onChangeParameters={setParameters}
         />
 
         <section className="levels-card" aria-labelledby="levels-heading">

@@ -59,6 +59,46 @@
       "turn_right": "Turn right"
     }
   },
+  "params": {
+    "title": "2. Parameters Panel & 3. Training (Web Worker)",
+    "whatDoesItDo": "What does this do?",
+    "learningRateLabel": "Learning Rate (0.001 – 1.0)",
+    "learningRateHint": "Controls the step size when updating weights. Too low learns slowly; too high may overshoot and fail to converge.",
+    "epochsLabel": "Training Epochs (1 – 500)",
+    "epochsHint": "How many times the network studies the entire dataset. More epochs lower error, but watch out for overfitting!",
+    "activationLabel": "Activation Function",
+    "activationHint": "Defines how a neuron transforms its weighted sum into output. Non-linear activations (ReLU, sigmoid, tanh) solve complex problems like XOR.",
+    "weightInitLabel": "Weight Initialization",
+    "weightInitHint": "How weights start before training. Breaking initial symmetry helps hidden neurons learn distinct roles.",
+    "biasLabel": "Use Bias (Threshold b)",
+    "biasHint": "Shifts the activation function left or right, allowing the neuron to fire even when inputs are zero.",
+    "manualWeightsTitle": "Manual Weight & Bias Tuning (Levels 1 & 2)",
+    "activations": {
+      "step": "Step (Perceptron)",
+      "sigmoid": "Sigmoid (0 to 1)",
+      "relu": "ReLU (Rectified Linear)",
+      "tanh": "Hyperbolic Tangent (−1 to 1)"
+    },
+    "weightInits": {
+      "deterministic": "Balanced Default (Fixed Seed)",
+      "xavier": "Xavier / Glorot",
+      "random": "Seeded Random",
+      "zeros": "Zeros"
+    },
+    "trainBtn": "Train Network",
+    "pauseBtn": "Pause",
+    "resumeBtn": "Resume",
+    "resetBtn": "Reset Weights",
+    "statusIdle": "Ready to train",
+    "statusRunning": "Training in Web Worker (60 fps UI)...",
+    "statusPaused": "Training paused (weights preserved)",
+    "statusCompleted": "Training completed!",
+    "epochCounter": "Epoch: {current} / {total}",
+    "currentLoss": "Current loss: {loss}",
+    "targetLoss": "Level target: ≤ {target}",
+    "chartTitle": "Learning Curve (Loss per Epoch)",
+    "chartRewardTitle": "Reward per Episode (Reinforcement)"
+  },
   "steps": {
     "build": "1. Build (Neuron Editor)",
     "tune": "2. Tune (Parameters Panel)",
