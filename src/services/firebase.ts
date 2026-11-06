@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { NetworkTopology } from '../core/nn-core';
 import { Locale } from '../i18n';
+import { LEVEL_IDS } from '../levels';
 
 export interface AuthContext {
   uid: string;
@@ -64,6 +65,8 @@ export class FirebasePermissionError extends Error {
   }
 }
 
+export const MAX_SAVED_NETWORKS_PER_LEVEL = 10;
+
 export const DEFAULT_FIRESTORE_RULES = `rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
@@ -73,11 +76,6 @@ service cloud.firestore {
   }
 }`;
 
-/**
- * Avaliador determinístico das regras de segurança (firestore.rules) para o emulador local e testes.
- * Garante exatamente a regra da seção 5 do SDD:
- * match /users/{uid}/{document=**} -> allow read, write: if request.auth != null && request.auth.uid == uid;
- */
 export function evaluateFirestoreRules(
   rulesContent: string,
   request: {
@@ -100,7 +98,6 @@ export function evaluateFirestoreRules(
 
   const normalized = request.path.replace(/^\/+/, '');
   const segments = normalized.split('/');
-  // Deve começar com users/{uid} e ter pelo menos 2 segmentos
   if (segments.length < 2 || segments[0] !== 'users') {
     return false;
   }
@@ -125,7 +122,7 @@ function saveEmulatorDb(db: Record<string, unknown>): void {
   try {
     localStorage.setItem(STORAGE_DB_KEY, JSON.stringify(db));
   } catch {
-    // fallback silencioso se localStorage estiver indisponível
+    // ignore
   }
 }
 
@@ -170,7 +167,7 @@ export function initFirebaseClient(): {
         connectFirestoreEmulator(firestoreInstance, fsHost, Number(fsPortStr || 8080));
         emulatorsConnected = true;
       } catch {
-        // Emulador já conectado
+        // ignore
       }
     }
   }
@@ -191,7 +188,7 @@ export function getPersistedAuthSession(): AuthContext | null {
   }
 }
 
-function persistAuthSession(session: AuthContext | null): void {
+export function persistAuthSession(session: AuthContext | null): void {
   try {
     if (!session) {
       localStorage.removeItem(STORAGE_AUTH_KEY);
@@ -203,9 +200,6 @@ function persistAuthSession(session: AuthContext | null): void {
   }
 }
 
-/**
- * Realiza login anônimo (RF-01). Tenta o emulador/Firebase Auth real e usa o emulador local determinístico como fallback.
- */
 export async function signInAnonymouslyUser(): Promise<AuthContext> {
   const existing = getPersistedAuthSession();
   if (existing) {
@@ -220,33 +214,33 @@ export async function signInAnonymouslyUser(): Promise<AuthContext> {
       const cred = await fbSignInAnonymously(auth);
       uid = cred.user.uid;
     } catch {
-      // Fallback para emulador local
+      // fallback
     }
   }
 
   const session: AuthContext = {
     uid,
     isAnonymous: true,
-    displayName: ' Cientista Anônimo',
+    displayName: 'Cientista Anônimo',
     email: null,
   };
 
   persistAuthSession(session);
 
-  await emulatorWriteDoc(session, `users/${uid}`, {
-    displayName: session.displayName.trim(),
-    createdAt: new Date().toISOString(),
-    lastLevel: '01-first-step',
-    totalStars: 0,
-    locale: 'pt-BR',
-  } satisfies UserProfileDoc);
+  const existingProfile = await emulatorReadDoc<UserProfileDoc>(session, `users/${uid}`);
+  if (!existingProfile) {
+    await emulatorWriteDoc(session, `users/${uid}`, {
+      displayName: session.displayName,
+      createdAt: new Date().toISOString(),
+      lastLevel: '01-first-step',
+      totalStars: 0,
+      locale: 'pt-BR',
+    } satisfies UserProfileDoc);
+  }
 
   return session;
 }
 
-/**
- * Vincula a conta anônima atual a uma conta Google preservando o mesmo UID e todo o progresso salvo (RF-01).
- */
 export async function linkAnonymousWithGoogle(
   currentSession: AuthContext,
   googleProfile?: { displayName: string; email: string },
@@ -264,12 +258,12 @@ export async function linkAnonymousWithGoogle(
         email = result.user.email || email;
       }
     } catch {
-      // Fallback para emulador local preservando UID anônimo
+      // fallback
     }
   }
 
   const linkedSession: AuthContext = {
-    uid: currentSession.uid, // Preserva o UID para manter progresso e redes salvas (RF-01)
+    uid: currentSession.uid,
     isAnonymous: false,
     displayName,
     email,
@@ -293,9 +287,6 @@ export async function linkAnonymousWithGoogle(
   return linkedSession;
 }
 
-/**
- * Lê um documento validando estritamente as regras do Firestore (firestore.rules).
- */
 export async function emulatorReadDoc<T>(
   auth: { uid: string } | null,
   path: string,
@@ -329,16 +320,13 @@ export async function emulatorReadDoc<T>(
         return snap.data() as T;
       }
     } catch {
-      // ignore offline
+      // ignore
     }
   }
 
   return null;
 }
 
-/**
- * Grava um documento validando estritamente as regras do Firestore (firestore.rules).
- */
 export async function emulatorWriteDoc<T>(
   auth: { uid: string } | null,
   path: string,
@@ -367,9 +355,106 @@ export async function emulatorWriteDoc<T>(
       const { db: firestore } = initFirebaseClient();
       await setDoc(doc(firestore, normalized), data as Record<string, unknown>, { merge: true });
     } catch {
-      // ignore offline
+      // ignore
     }
   }
+}
+
+export async function saveLevelProgressToFirestore(
+  auth: AuthContext,
+  levelId: string,
+  progress: LevelProgressDoc,
+  totalStars: number,
+  locale: Locale,
+): Promise<void> {
+  await emulatorWriteDoc(auth, `users/${auth.uid}/progress/${levelId}`, progress);
+
+  const existingProfile = await emulatorReadDoc<UserProfileDoc>(auth, `users/${auth.uid}`);
+  await emulatorWriteDoc(auth, `users/${auth.uid}`, {
+    displayName: auth.displayName,
+    createdAt: existingProfile?.createdAt || new Date().toISOString(),
+    lastLevel: levelId,
+    totalStars,
+    locale,
+  } satisfies UserProfileDoc);
+}
+
+export async function loadUserProgressFromFirestore(auth: AuthContext): Promise<{
+  profile: UserProfileDoc | null;
+  progressByLevel: Record<string, LevelProgressDoc>;
+}> {
+  const profile = await emulatorReadDoc<UserProfileDoc>(auth, `users/${auth.uid}`);
+  const progressByLevel: Record<string, LevelProgressDoc> = {};
+
+  for (const levelId of LEVEL_IDS) {
+    const docData = await emulatorReadDoc<LevelProgressDoc>(
+      auth,
+      `users/${auth.uid}/progress/${levelId}`,
+    );
+    if (docData) {
+      progressByLevel[levelId] = docData;
+    }
+  }
+
+  return { profile, progressByLevel };
+}
+
+/**
+ * Salva uma rede em users/{uid}/networks/{networkId} respeitando o limite de até 10 redes por fase (RF-09).
+ */
+export async function saveNetworkToFirestore(
+  auth: AuthContext,
+  network: Omit<SavedNetworkDoc, 'id' | 'savedAt'> & { id?: string },
+): Promise<SavedNetworkDoc> {
+  const existingForLevel = await listSavedNetworksForLevel(auth, network.levelId);
+  const isUpdatingExisting = network.id && existingForLevel.some((n) => n.id === network.id);
+
+  if (!isUpdatingExisting && existingForLevel.length >= MAX_SAVED_NETWORKS_PER_LEVEL) {
+    throw new Error(`Maximum of ${MAX_SAVED_NETWORKS_PER_LEVEL} saved networks per level reached.`);
+  }
+
+  const networkId = network.id || `net_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  const fullDoc: SavedNetworkDoc = {
+    id: networkId,
+    levelId: network.levelId,
+    name: network.name,
+    topology: network.topology,
+    weights: network.weights,
+    params: network.params,
+    savedAt: new Date().toISOString(),
+  };
+
+  await emulatorWriteDoc(auth, `users/${auth.uid}/networks/${networkId}`, fullDoc);
+  return fullDoc;
+}
+
+export async function listSavedNetworksForLevel(
+  auth: AuthContext,
+  levelId: string,
+): Promise<SavedNetworkDoc[]> {
+  const allowed = evaluateFirestoreRules(DEFAULT_FIRESTORE_RULES, {
+    auth,
+    path: `users/${auth.uid}/networks/any`,
+    method: 'read',
+  });
+  if (!allowed) {
+    throw new FirebasePermissionError();
+  }
+
+  const prefix = `users/${auth.uid}/networks/`;
+  const db = loadEmulatorDb();
+  const list: SavedNetworkDoc[] = [];
+
+  for (const [key, val] of Object.entries(db)) {
+    if (key.startsWith(prefix) && val) {
+      const docItem = val as SavedNetworkDoc;
+      if (docItem.levelId === levelId) {
+        list.push(docItem);
+      }
+    }
+  }
+
+  return list.sort((a, b) => a.savedAt.localeCompare(b.savedAt));
 }
 
 export function clearEmulatorStorage(): void {

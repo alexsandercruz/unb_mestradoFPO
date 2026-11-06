@@ -532,3 +532,4 @@ export function ParamsPanel({
     </section>
   );
 }
+

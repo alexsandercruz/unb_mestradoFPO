@@ -384,3 +384,4 @@ export function ArenaView({
     </section>
   );
 }
+

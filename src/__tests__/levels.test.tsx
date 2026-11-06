@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { LEVELS, getIdealParametersForLevel } from '../features/levels';
 import { runSimulationEpisode } from '../core/simulation';
@@ -52,11 +52,14 @@ describe('T7 Levels 1 to 5 — Ideal Networks Win All 5 Levels, Stars & Tutorial
     }
   });
 
-  it('unlocks subsequent levels on completion and opens Glossary & Final Quiz (RF-08, RF-10)', () => {
+  it('unlocks subsequent levels on completion and opens Glossary & Final Quiz (RF-08, RF-10)', async () => {
     render(<App />);
 
     // Fase 1 está liberada, Fase 2 começa bloqueada
-    const starsEarned = useGameStore.getState().recordLevelCompletion(true, 0.01);
+    let starsEarned = 0;
+    await act(async () => {
+      starsEarned = await useGameStore.getState().recordLevelCompletion(true, 0.01);
+    });
     expect(starsEarned).toBe(3);
     expect(useGameStore.getState().unlockedUpToLevel).toBe(2);
 
@@ -74,3 +77,4 @@ describe('T7 Levels 1 to 5 — Ideal Networks Win All 5 Levels, Stars & Tutorial
     expect(screen.getByTestId('quiz-score-badge')).toHaveTextContent('5 / 5');
   });
 });
+

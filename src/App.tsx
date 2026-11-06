@@ -12,6 +12,7 @@ export function App(): React.JSX.Element {
     activeLevelId,
     unlockedUpToLevel,
     starsByLevel,
+    savedNetworks,
     authSession,
     topology,
     parameters,
@@ -24,6 +25,8 @@ export function App(): React.JSX.Element {
     setActiveLevelId,
     loadIdealNetworkForLevel,
     recordLevelCompletion,
+    saveCurrentNetwork,
+    loadSavedNetwork,
     setLastTrainingLoss,
     setTopology,
     setParameters,
@@ -73,6 +76,7 @@ export function App(): React.JSX.Element {
                   <button
                     type="button"
                     className="secondary-btn"
+                    data-testid="link-google-btn"
                     onClick={() => void linkGoogleAccount()}
                   >
                     {t.auth.linkGoogle}
@@ -122,8 +126,11 @@ export function App(): React.JSX.Element {
           activeLevelNumber={activeLevelId}
           unlockedUpTo={unlockedUpToLevel}
           starsByLevel={starsByLevel}
-          onSelectLevel={setActiveLevelId}
+          savedNetworks={savedNetworks}
+          onSelectLevel={(id) => void setActiveLevelId(id)}
           onLoadIdealNetwork={loadIdealNetworkForLevel}
+          onSaveCurrentNetwork={saveCurrentNetwork}
+          onLoadSavedNetwork={loadSavedNetwork}
         />
 
         <NeuronEditor
@@ -172,7 +179,7 @@ export function App(): React.JSX.Element {
           useBias={useBias}
           arenaMap={activeLevel.arena}
           onEpisodeComplete={(res) => {
-            recordLevelCompletion(res.outcome === 'success');
+            void recordLevelCompletion(res.outcome === 'success');
           }}
         />
       </main>

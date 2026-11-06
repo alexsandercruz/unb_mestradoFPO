@@ -116,6 +116,14 @@
     "sensorsTelemetry": "Leitura dos Sensores (Tick Atual)",
     "actionsTelemetry": "Decisão da Rede (Saídas)"
   },
+  "persistence": {
+    "savedNetworksTitle": "Redes Salvas na Nuvem (Firestore RF-09: {count} / 10 nesta fase)",
+    "networkNamePlaceholder": "Nome da rede (ex: Minha Rede XOR)",
+    "saveNetworkBtn": "Salvar Rede no Firestore",
+    "loadNetworkBtn": "Carregar",
+    "emptyNetworks": "Nenhuma rede salva nesta fase ainda.",
+    "limitReached": "Limite máximo de 10 redes por fase atingido."
+  },
   "levels": {
     "heading": "Fases da Missão (1 a 5) — Progresso e Tutorial",
     "level1": "Fase 1 — Primeiro passo (Perceptron 1→1)",

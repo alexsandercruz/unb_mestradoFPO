@@ -116,6 +116,14 @@
     "sensorsTelemetry": "Sensor Readings (Current Tick)",
     "actionsTelemetry": "Network Decision (Outputs)"
   },
+  "persistence": {
+    "savedNetworksTitle": "Cloud Saved Networks (Firestore RF-09: {count} / 10 in this level)",
+    "networkNamePlaceholder": "Network name (e.g. My XOR Net)",
+    "saveNetworkBtn": "Save Network to Firestore",
+    "loadNetworkBtn": "Load",
+    "emptyNetworks": "No saved networks in this level yet.",
+    "limitReached": "Maximum limit of 10 networks per level reached."
+  },
   "levels": {
     "heading": "Mission Levels (1 to 5) — Progress & Tutorial",
     "level1": "Level 1 — First Step (Perceptron 1→1)",

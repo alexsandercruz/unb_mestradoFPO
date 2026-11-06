@@ -69,3 +69,4 @@ describe('T6 Arena & Robot Simulation — Deterministic Seed (10 runs) & Replay 
     expect(screen.getByTestId('arena-outcome-banner')).toHaveTextContent(/Replay/i);
   });
 });
+
